@@ -3,6 +3,18 @@
 // Copyright (c) 2010 Doug McInnes
 //
 
+
+//image upload
+var soundwaveImage = new Image();
+soundwaveImage.src = "images/soundwave.png";
+
+var IMAGES = { 
+ 'soundwave': soundwaveImage
+}
+
+
+var test = true
+
 KEY_CODES = {
   32: 'space',
   37: 'left',
@@ -353,8 +365,7 @@ Sprite = function () {
             cn.south.west.isEmpty(this.collidesWith));
   };
   this.wrapPostMove = function () {
-    if(!Game.flags.bod_engine || this.name == 'ship'){
-      console.log('')
+    if(this.name === 'ship'){
       if (this.x > Game.canvasWidth) {
         this.x = 0;
         Game.mapX++
@@ -369,9 +380,18 @@ Sprite = function () {
         this.y = Game.canvasHeight;
         Game.mapY--
       }
-
+    }else if(!Game.flags.bod_engine_on){
+      if (this.x > Game.canvasWidth) {
+        this.x = 0;
+      } else if (this.x < 0) {
+        this.x = Game.canvasWidth;
+      }
+      if (this.y > Game.canvasHeight) {
+        this.y = 0;
+      } else if (this.y < 0) {
+        this.y = Game.canvasHeight;
+      }
     }
-
   };
 
 };
@@ -828,7 +848,7 @@ Text = {
     }
   },
 
-  renderText: function(text, size, x, y) {
+  renderText: function(text, size, x, y, glyph = true) {
     this.context.save();
 
     this.context.translate(x, y);
@@ -839,7 +859,13 @@ Text = {
     var chars = text.split('');
     var charsLength = chars.length;
     for (var i = 0; i < charsLength; i++) {
-      this.renderGlyph(this.context, this.face, chars[i]);
+      if(glyph) this.renderGlyph(this.context, this.face, chars[i]);
+      else{
+        this.context.font ="14pt Calibri"
+
+        this.context.fillStyle="white"
+        this.context.fillText(text, 0,0)
+      } 
     }
     this.context.fill();
 
@@ -957,6 +983,21 @@ Game = {
       Game.totalAsteroids = 2;
       // Game.spawnAsteroids();
 
+      setTimeout(() => {
+        Game.transmission_incoming = true
+      }, test ? 500 : 100000)
+
+      setTimeout(() => {
+        Game.transmission_incoming = false
+        Game.flags.bod_engine_on = true
+        Game.textSequence = ['Wow, you did it...The asteroids are all destroyed! We won!', 'Set course for back home Captain, Avery and the kids are all here waiting for you. You\'re a hero!!!']
+        Game.textSequence.portrait = 'soundwave'
+        Game.textSequence.name = 'Headquarters'
+      }, test ? 1000 : 110000)
+
+
+
+
       // Game.nextBigAlienTime = Date.now() + 30000 + (30000 * Math.random());
 
       this.state = 'spawn_ship';
@@ -1038,11 +1079,14 @@ Game = {
 
 
 $(function () {
+  var canvas2 = $('#fake_canvas')
+  Game.canvas2 = canvas2
   var canvas = $("#canvas");
   Game.canvasWidth  = canvas.width();
   Game.canvasHeight = canvas.height();
 
   var context = canvas[0].getContext("2d");
+  var context2 = canvas2[0].getContext("2d");
 
   Text.context = context;
   Text.face = vector_battle;
@@ -1191,14 +1235,6 @@ $(function () {
       frameCount = 0;
     }
 
-    if(Date.now() - Game.startTime > 6000 && !Game.flags.transmissionSent){
-      Game.flags.transmissionSent = true
-      Game.flags.bod_engine = true
-      Game.textSequence = ['< INCOMING TRANMISSION >', 'Well that\'s wierd', 'I guess.. thats it',
-        'you really did it, you saved us.',  'the asteroids! They\'re gone!', '... I dont quite understand',
-        'set course for back home', 'Congratulations Captain, you\'re a hero']
-    }
-
     renderGUI(false)
 
     if (paused) {
@@ -1208,7 +1244,11 @@ $(function () {
     }
   };
 
-  var renderGUI = function(notUpdating){
+  mainLoop();
+
+
+  //helper funcs
+  function renderGUI(notUpdating){
     if(notUpdating){
       context.fillStyle='black'
       context.fillRect(0, 0, Game.canvasWidth, Game.canvasHeight);
@@ -1235,19 +1275,73 @@ $(function () {
       Text.renderText(''+avgFramerate, 24, Game.canvasWidth - 38, Game.canvasHeight - 2);
     }
 
+    if(Game.transmission_incoming){
+      console.log('transmission_incoming')
+      context.fillStyle='white'
+      let text = '<< Transmission Incoming >>'
+      context.font ="24pt Arial"
+      let length = context.measureText(text).width
+      context.fillText(text, Game.canvasWidth/2 - length/2, 205)
+    }
+
     if(Game.textSequence.length){
-      Text.renderText(Game.textSequence[0], 18, Game.canvasWidth/2 - 14 * Game.textSequence[0].length, 240);
+
+      //textbox
+      context.fillStyle="rgba(255,255,255, 0.1)"
+      context.fillRect(Game.canvasWidth/2 - 210, 190, 420, 115)
+
+      //portrait
+      if(Game.textSequence.portrait){
+        //portrait outline
+        context.fillStyle="rgb(0,0,0)"
+        context.fillRect(Game.canvasWidth/2 - 200, 140, 80, 70)
+        context.drawImage(IMAGES[Game.textSequence.portrait], Game.canvasWidth/2 - 198, 142, 76, 66)
+      } 
+
+      //portrait name
+      context.font ="24pt Arial"
+      context.fillStyle="white"
+      context.fillText(Game.textSequence.name ? Game.textSequence.name : '???', Game.canvasWidth/2 - 110, 205)
+
+      //text
+      let text = Game.textSequence[0]
+      context.font ="18pt Arial"
+      wrapText(context, text, Game.canvasWidth/2 - 200, 240, 410, 25)
+
+      // more text icon
+      if(Game.textSequence.length > 1){
+        let x = Game.canvasWidth/2
+        context.fillRect(x+190, 285, 10, 10)
+      }
+
       paused = true;
     }
   }
 
-  var unpause = function(){
+  function wrapText(context, text, x, y, maxWidth, lineHeight) {
+    var words = text.split(' ');
+    var line = '';
+
+    for(var n = 0; n < words.length; n++) {
+      var testLine = line + words[n] + ' ';
+      var metrics = context.measureText(testLine);
+      var testWidth = metrics.width;
+      if (testWidth > maxWidth && n > 0) {
+        context.fillText(line, x, y);
+        line = words[n] + ' ';
+        y += lineHeight;
+      } else {
+        line = testLine;
+      }
+    }
+    context.fillText(line, x, y);
+  }
+      
+  function unpause(){
     // start up again
     lastFrame = Date.now();
     mainLoop();
   }
-
-  mainLoop();
 
   $(window).keydown(function (e) {
     switch (KEY_CODES[e.keyCode]) {
