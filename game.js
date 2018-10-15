@@ -128,44 +128,44 @@ Sprite = function () {
 
     this.context.restore();
 
-    if (this.bridgesH && this.currentNode && this.currentNode.dupe.horizontal) {
-      this.x += this.currentNode.dupe.horizontal;
-      this.context.save();
-      this.configureTransform();
-      this.draw();
-      this.checkCollisionsAgainst(canidates);
-      this.context.restore();
-      if (this.currentNode) {
-        this.x -= this.currentNode.dupe.horizontal;
-      }
-    }
-    if (this.bridgesV && this.currentNode && this.currentNode.dupe.vertical) {
-      this.y += this.currentNode.dupe.vertical;
-      this.context.save();
-      this.configureTransform();
-      this.draw();
-      this.checkCollisionsAgainst(canidates);
-      this.context.restore();
-      if (this.currentNode) {
-        this.y -= this.currentNode.dupe.vertical;
-      }
-    }
-    if (this.bridgesH && this.bridgesV &&
-        this.currentNode &&
-        this.currentNode.dupe.vertical &&
-        this.currentNode.dupe.horizontal) {
-      this.x += this.currentNode.dupe.horizontal;
-      this.y += this.currentNode.dupe.vertical;
-      this.context.save();
-      this.configureTransform();
-      this.draw();
-      this.checkCollisionsAgainst(canidates);
-      this.context.restore();
-      if (this.currentNode) {
-        this.x -= this.currentNode.dupe.horizontal;
-        this.y -= this.currentNode.dupe.vertical;
-      }
-    }
+    // if (this.bridgesH && this.currentNode && this.currentNode.dupe.horizontal) {
+    //   this.x += this.currentNode.dupe.horizontal;
+    //   this.context.save();
+    //   this.configureTransform();
+    //   this.draw();
+    //   this.checkCollisionsAgainst(canidates);
+    //   this.context.restore();
+    //   if (this.currentNode) {
+    //     this.x -= this.currentNode.dupe.horizontal;
+    //   }
+    // }
+    // if (this.bridgesV && this.currentNode && this.currentNode.dupe.vertical) {
+    //   this.y += this.currentNode.dupe.vertical;
+    //   this.context.save();
+    //   this.configureTransform();
+    //   this.draw();
+    //   this.checkCollisionsAgainst(canidates);
+    //   this.context.restore();
+    //   if (this.currentNode) {
+    //     this.y -= this.currentNode.dupe.vertical;
+    //   }
+    // }
+    // if (this.bridgesH && this.bridgesV &&
+    //     this.currentNode &&
+    //     this.currentNode.dupe.vertical &&
+    //     this.currentNode.dupe.horizontal) {
+    //   this.x += this.currentNode.dupe.horizontal;
+    //   this.y += this.currentNode.dupe.vertical;
+    //   this.context.save();
+    //   this.configureTransform();
+    //   this.draw();
+    //   this.checkCollisionsAgainst(canidates);
+    //   this.context.restore();
+    //   if (this.currentNode) {
+    //     this.x -= this.currentNode.dupe.horizontal;
+    //     this.y -= this.currentNode.dupe.vertical;
+    //   }
+    // }
   };
   this.move = function (delta) {
     if (!this.visible) return;
@@ -226,6 +226,8 @@ Sprite = function () {
   };
   this.draw = function () {
     if (!this.visible) return;
+
+    this.context.strokeStyle="white"
 
     this.context.lineWidth = 1.0 / this.scale;
 
@@ -351,16 +353,25 @@ Sprite = function () {
             cn.south.west.isEmpty(this.collidesWith));
   };
   this.wrapPostMove = function () {
-    if (this.x > Game.canvasWidth) {
-      this.x = 0;
-    } else if (this.x < 0) {
-      this.x = Game.canvasWidth;
+    if(!Game.flags.bod_engine || this.name == 'ship'){
+      console.log('')
+      if (this.x > Game.canvasWidth) {
+        this.x = 0;
+        Game.mapX++
+      } else if (this.x < 0) {
+        this.x = Game.canvasWidth;
+        Game.mapX--
+      }
+      if (this.y > Game.canvasHeight) {
+        this.y = 0;
+        Game.mapY++
+      } else if (this.y < 0) {
+        this.y = Game.canvasHeight;
+        Game.mapY--
+      }
+
     }
-    if (this.y > Game.canvasHeight) {
-      this.y = 0;
-    } else if (this.y < 0) {
-      this.y = Game.canvasHeight;
-    }
+
   };
 
 };
@@ -585,6 +596,7 @@ Bullet = function () {
   this.configureTransform = function () {};
   this.draw = function () {
     if (this.visible) {
+      this.context.strokeStyle="white";
       this.context.save();
       this.context.lineWidth = 2;
       this.context.beginPath();
@@ -872,9 +884,13 @@ Game = {
   score: 0,
   totalAsteroids: 5,
   lives: 0,
+  mapX: 0,
+  mapY:0,
+  textSequence: [],
+  flags: {},
 
-  canvasWidth: 800,
-  canvasHeight: 600,
+  canvasWidth: 1280,
+  canvasHeight: 768,
 
   sprites: [],
   ship: null,
@@ -934,12 +950,14 @@ Game = {
         }
       }
 
+      Game.startTime = Date.now();
+
       Game.score = 0;
       Game.lives = 2;
       Game.totalAsteroids = 2;
-      Game.spawnAsteroids();
+      // Game.spawnAsteroids();
 
-      Game.nextBigAlienTime = Date.now() + 30000 + (30000 * Math.random());
+      // Game.nextBigAlienTime = Date.now() + 30000 + (30000 * Math.random());
 
       this.state = 'spawn_ship';
     },
@@ -963,11 +981,11 @@ Game = {
       if (i == Game.sprites.length) {
         this.state = 'new_level';
       }
-      if (!Game.bigAlien.visible &&
-          Date.now() > Game.nextBigAlienTime) {
-        Game.bigAlien.visible = true;
-        Game.nextBigAlienTime = Date.now() + (30000 * Math.random());
-      }
+      // if (!Game.bigAlien.visible &&
+      //     Date.now() > Game.nextBigAlienTime) {
+      //   Game.bigAlien.visible = true;
+      //   Game.nextBigAlienTime = Date.now() + (30000 * Math.random());
+      // }
     },
     new_level: function () {
       if (this.timer == null) {
@@ -978,7 +996,7 @@ Game = {
         this.timer = null;
         Game.totalAsteroids++;
         if (Game.totalAsteroids > 12) Game.totalAsteroids = 12;
-        Game.spawnAsteroids();
+        // Game.spawnAsteroids();
         this.state = 'run';
       }
     },
@@ -1097,6 +1115,8 @@ $(function () {
 
   var i, j = 0;
 
+  var startTime = null;
+
   var paused = false;
   var showFramerate = false;
   var avgFramerate = 0;
@@ -1125,23 +1145,27 @@ $(function () {
   })();
 
   var mainLoop = function () {
-    context.clearRect(0, 0, Game.canvasWidth, Game.canvasHeight);
+
+    //clear screen
+    context.fillStyle='black'
+    context.fillRect(0, 0, Game.canvasWidth, Game.canvasHeight);
+    context.fillStyle='white'
 
     Game.FSM.execute();
 
-    if (KEY_STATUS.g) {
-      context.beginPath();
-      for (var i = 0; i < gridWidth; i++) {
-        context.moveTo(i * GRID_SIZE, 0);
-        context.lineTo(i * GRID_SIZE, Game.canvasHeight);
-      }
-      for (var j = 0; j < gridHeight; j++) {
-        context.moveTo(0, j * GRID_SIZE);
-        context.lineTo(Game.canvasWidth, j * GRID_SIZE);
-      }
-      context.closePath();
-      context.stroke();
-    }
+    // if (KEY_STATUS.g) {
+    //   context.beginPath();
+    //   for (var i = 0; i < gridWidth; i++) {
+    //     context.moveTo(i * GRID_SIZE, 0);
+    //     context.lineTo(i * GRID_SIZE, Game.canvasHeight);
+    //   }
+    //   for (var j = 0; j < gridHeight; j++) {
+    //     context.moveTo(0, j * GRID_SIZE);
+    //     context.lineTo(Game.canvasWidth, j * GRID_SIZE);
+    //   }
+    //   context.closePath();
+    //   context.stroke();
+    // }
 
     thisFrame = Date.now();
     elapsed = thisFrame - lastFrame;
@@ -1159,7 +1183,41 @@ $(function () {
       }
     }
 
-    // score
+    frameCount++;
+    elapsedCounter += elapsed;
+    if (elapsedCounter > 1000) {
+      elapsedCounter -= 1000;
+      avgFramerate = frameCount;
+      frameCount = 0;
+    }
+
+    if(Date.now() - Game.startTime > 6000 && !Game.flags.transmissionSent){
+      Game.flags.transmissionSent = true
+      Game.flags.bod_engine = true
+      Game.textSequence = ['< INCOMING TRANMISSION >', 'Well that\'s wierd', 'I guess.. thats it',
+        'you really did it, you saved us.',  'the asteroids! They\'re gone!', '... I dont quite understand',
+        'set course for back home', 'Congratulations Captain, you\'re a hero']
+    }
+
+    renderGUI(false)
+
+    if (paused) {
+      // Text.renderText('PAUSED', 72, Game.canvasWidth/2 - 160, 120);
+    } else {
+      requestAnimFrame(mainLoop, canvasNode);
+    }
+  };
+
+  var renderGUI = function(notUpdating){
+    if(notUpdating){
+      context.fillStyle='black'
+      context.fillRect(0, 0, Game.canvasWidth, Game.canvasHeight);
+      context.fillStyle='white'
+      for (i = 0; i < sprites.length; i++) {
+        sprites[i].run(0);
+      }
+    }
+
     var score_text = ''+Game.score;
     Text.renderText(score_text, 18, Game.canvasWidth - 14 * score_text.length, 20);
 
@@ -1177,25 +1235,33 @@ $(function () {
       Text.renderText(''+avgFramerate, 24, Game.canvasWidth - 38, Game.canvasHeight - 2);
     }
 
-    frameCount++;
-    elapsedCounter += elapsed;
-    if (elapsedCounter > 1000) {
-      elapsedCounter -= 1000;
-      avgFramerate = frameCount;
-      frameCount = 0;
+    if(Game.textSequence.length){
+      Text.renderText(Game.textSequence[0], 18, Game.canvasWidth/2 - 14 * Game.textSequence[0].length, 240);
+      paused = true;
     }
+  }
 
-    if (paused) {
-      Text.renderText('PAUSED', 72, Game.canvasWidth/2 - 160, 120);
-    } else {
-      requestAnimFrame(mainLoop, canvasNode);
-    }
-  };
+  var unpause = function(){
+    // start up again
+    lastFrame = Date.now();
+    mainLoop();
+  }
 
   mainLoop();
 
   $(window).keydown(function (e) {
     switch (KEY_CODES[e.keyCode]) {
+      case 'space':
+        if(Game.textSequence.length){
+          Game.textSequence.shift()
+          renderGUI(true);
+          console.log(Game.textSequence)
+          if(!Game.textSequence.length){
+            paused = false
+            unpause()
+           }
+        } 
+        break;
       case 'f': // show framerate
         showFramerate = !showFramerate;
         break;
@@ -1203,8 +1269,7 @@ $(function () {
         paused = !paused;
         if (!paused) {
           // start up again
-          lastFrame = Date.now();
-          mainLoop();
+          unpause()
         }
         break;
       case 'm': // mute
