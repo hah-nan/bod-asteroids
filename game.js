@@ -2,6 +2,7 @@
 //
 // Copyright (c) 2010 Doug McInnes
 //
+var test = true
 
 
 //image upload
@@ -12,8 +13,46 @@ var IMAGES = {
  'soundwave': soundwaveImage
 }
 
+var Map = {}
+Map.x1y0 = function(context){
 
-var test = true
+  shipDownLeft(20, 20, context, 7)
+
+  shipDown(50, 50, context, 7)
+}
+
+function shipDownRight(x, y, context, scale){
+  //diagonal down-right
+  context.strokeStyle='white'
+  context.beginPath();
+  context.moveTo(x + (0 * scale), y + (1 * scale));
+  context.lineTo(x + (2.2 * scale), y + (2.2 * scale));
+  context.lineTo(x + (1 * scale), y + (0 * scale));
+  context.lineTo(x + (0 * scale), y + (1 * scale));
+  context.stroke();
+}
+
+function shipDownLeft(x, y, context, scale){
+  //diagonal down-right
+  context.strokeStyle='white'
+  context.beginPath();
+  context.moveTo(x + (2.2 * scale), y + (1 * scale));
+  context.lineTo(x + (0 * scale), y + (2.2 * scale));
+  context.lineTo(x + (1 * scale), y + (0 * scale));
+  context.lineTo(x + (2.2 * scale), y + (1 * scale));
+  context.stroke();
+}
+
+function shipDown(x, y, context, scale){
+  context.strokeStyle='white'
+  context.beginPath();
+  context.moveTo(x + (0 * scale), y + (0 * scale));
+  context.lineTo(x + (1.5 * scale), y + (0 * scale));
+  context.lineTo(x + (.75 * scale), y + (2.25 * scale));
+  context.lineTo(x + (0 * scale), y + (0 * scale));
+  context.stroke();
+}
+
 
 KEY_CODES = {
   32: 'space',
@@ -140,44 +179,44 @@ Sprite = function () {
 
     this.context.restore();
 
-    // if (this.bridgesH && this.currentNode && this.currentNode.dupe.horizontal) {
-    //   this.x += this.currentNode.dupe.horizontal;
-    //   this.context.save();
-    //   this.configureTransform();
-    //   this.draw();
-    //   this.checkCollisionsAgainst(canidates);
-    //   this.context.restore();
-    //   if (this.currentNode) {
-    //     this.x -= this.currentNode.dupe.horizontal;
-    //   }
-    // }
-    // if (this.bridgesV && this.currentNode && this.currentNode.dupe.vertical) {
-    //   this.y += this.currentNode.dupe.vertical;
-    //   this.context.save();
-    //   this.configureTransform();
-    //   this.draw();
-    //   this.checkCollisionsAgainst(canidates);
-    //   this.context.restore();
-    //   if (this.currentNode) {
-    //     this.y -= this.currentNode.dupe.vertical;
-    //   }
-    // }
-    // if (this.bridgesH && this.bridgesV &&
-    //     this.currentNode &&
-    //     this.currentNode.dupe.vertical &&
-    //     this.currentNode.dupe.horizontal) {
-    //   this.x += this.currentNode.dupe.horizontal;
-    //   this.y += this.currentNode.dupe.vertical;
-    //   this.context.save();
-    //   this.configureTransform();
-    //   this.draw();
-    //   this.checkCollisionsAgainst(canidates);
-    //   this.context.restore();
-    //   if (this.currentNode) {
-    //     this.x -= this.currentNode.dupe.horizontal;
-    //     this.y -= this.currentNode.dupe.vertical;
-    //   }
-    // }
+    if (this.bridgesH && this.currentNode && this.currentNode.dupe.horizontal) {
+      this.x += this.currentNode.dupe.horizontal;
+      this.context.save();
+      this.configureTransform();
+      this.draw();
+      this.checkCollisionsAgainst(canidates);
+      this.context.restore();
+      if (this.currentNode) {
+        this.x -= this.currentNode.dupe.horizontal;
+      }
+    }
+    if (this.bridgesV && this.currentNode && this.currentNode.dupe.vertical) {
+      this.y += this.currentNode.dupe.vertical;
+      this.context.save();
+      this.configureTransform();
+      this.draw();
+      this.checkCollisionsAgainst(canidates);
+      this.context.restore();
+      if (this.currentNode) {
+        this.y -= this.currentNode.dupe.vertical;
+      }
+    }
+    if (this.bridgesH && this.bridgesV &&
+        this.currentNode &&
+        this.currentNode.dupe.vertical &&
+        this.currentNode.dupe.horizontal) {
+      this.x += this.currentNode.dupe.horizontal;
+      this.y += this.currentNode.dupe.vertical;
+      this.context.save();
+      this.configureTransform();
+      this.draw();
+      this.checkCollisionsAgainst(canidates);
+      this.context.restore();
+      if (this.currentNode) {
+        this.x -= this.currentNode.dupe.horizontal;
+        this.y -= this.currentNode.dupe.vertical;
+      }
+    }
   };
   this.move = function (delta) {
     if (!this.visible) return;
@@ -1196,6 +1235,11 @@ $(function () {
     context.fillStyle='white'
 
     Game.FSM.execute();
+
+    //draw currentMap
+    let coords = `x${Game.mapX}y${Game.mapY}`
+        // console.log(coords, Map[coords])
+    if(Map[coords]) Map[coords](context)
 
     // if (KEY_STATUS.g) {
     //   context.beginPath();
