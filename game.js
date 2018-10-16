@@ -2,8 +2,15 @@
 //
 // Copyright (c) 2010 Doug McInnes
 //
-var test = true
 
+function colDetect(rect1, rect2){
+  return (rect1.x < rect2.x + rect2.width &&
+     rect1.x + rect1.width > rect2.x &&
+     rect1.y < rect2.y + rect2.height &&
+     rect1.y + rect1.height > rect2.y)
+}
+
+var test = true
 
 //image upload
 var soundwaveImage = new Image();
@@ -15,42 +22,100 @@ var IMAGES = {
 
 var Map = {}
 Map.x1y0 = function(context){
+  makePlanet(context, 100,100, 200)
+  makePlanet(context, 500, 200, 20)
+  makePlanet(context, 530, 250, 10)
 
-  shipDownLeft(20, 20, context, 7)
-
-  shipDown(50, 50, context, 7)
+  makeShip(context, 200, 200, 'down', ['What happened over there?', 'One second there was a ton of asteroids and then suddenly they were all gone...'])
 }
 
-function shipDownRight(x, y, context, scale){
-  //diagonal down-right
+
+function makePlanet(context, x, y, size){
   context.strokeStyle='white'
   context.beginPath();
-  context.moveTo(x + (0 * scale), y + (1 * scale));
-  context.lineTo(x + (2.2 * scale), y + (2.2 * scale));
-  context.lineTo(x + (1 * scale), y + (0 * scale));
-  context.lineTo(x + (0 * scale), y + (1 * scale));
+  context.arc(x+size, y+size, size, 0, 2*Math.PI);
   context.stroke();
 }
 
-function shipDownLeft(x, y, context, scale){
-  //diagonal down-right
-  context.strokeStyle='white'
-  context.beginPath();
-  context.moveTo(x + (2.2 * scale), y + (1 * scale));
-  context.lineTo(x + (0 * scale), y + (2.2 * scale));
-  context.lineTo(x + (1 * scale), y + (0 * scale));
-  context.lineTo(x + (2.2 * scale), y + (1 * scale));
-  context.stroke();
+function makeShip(context, x, y, facing, dialogue){
+  let playerRect = {x: player.x - 25, y: player.y - 25, width: 50, height: 50}
+
+  let shipRect = {x: x - 25, y: y - 25, width: 50, height: 50}
+  if(!paused && readyForPump && dialogue && colDetect(playerRect, shipRect)){
+    Game.instructional = 'Press button to talk'
+    if(KEY_STATUS['space'] && !Game.textSequence.length){
+      readyForPump = false
+      Game.textSequence = dialogue
+      Game.textSequence.name = 'Andre'
+      Game.textSequence.portrait = 'ship'
+      Game.instructional = ''
+    } 
+  }
+
+  drawShip[facing](x, y, context, 7)
 }
 
-function shipDown(x, y, context, scale){
-  context.strokeStyle='white'
-  context.beginPath();
-  context.moveTo(x + (0 * scale), y + (0 * scale));
-  context.lineTo(x + (1.5 * scale), y + (0 * scale));
-  context.lineTo(x + (.75 * scale), y + (2.25 * scale));
-  context.lineTo(x + (0 * scale), y + (0 * scale));
-  context.stroke();
+
+drawShip = {
+  up : (x, y, context, scale) => {
+    context.strokeStyle='white'
+    context.beginPath();
+    context.moveTo(x + (.75 * scale), y + (0 * scale));
+    context.lineTo(x + (1.5 * scale), y + (2.2 * scale));
+    context.lineTo(x + (0 * scale), y + (2.2 * scale));
+    context.lineTo(x + (.75 * scale), y + (0 * scale));
+    context.stroke();
+  },
+
+  left : (x, y, context, scale) => {
+    context.strokeStyle='white'
+    context.beginPath();
+    context.moveTo(x + (2.2 * scale), y + (0 * scale));
+    context.lineTo(x + (0 * scale), y + (.75 * scale));
+    context.lineTo(x + (2.2 * scale), y + (1.5 * scale));
+    context.lineTo(x + (2.2 * scale), y + (0 * scale));
+    context.stroke();
+  },
+
+  right : (x, y, context, scale) => {
+    context.strokeStyle='white'
+    context.beginPath();
+    context.moveTo(x + (0 * scale), y + (0 * scale));
+    context.lineTo(x + (0 * scale), y + (1.5 * scale));
+    context.lineTo(x + (2.2 * scale), y + (.75 * scale));
+    context.lineTo(x + (0 * scale), y + (0 * scale));
+    context.stroke();
+  },
+
+  downright : (x, y, context, scale) => {
+    context.strokeStyle='white'
+    context.beginPath();
+    context.moveTo(x + (0 * scale), y + (1 * scale));
+    context.lineTo(x + (2.2 * scale), y + (2.2 * scale));
+    context.lineTo(x + (1 * scale), y + (0 * scale));
+    context.lineTo(x + (0 * scale), y + (1 * scale));
+    context.stroke();
+  },
+
+  downleft : (x, y, context, scale) => {
+    context.strokeStyle='white'
+    context.beginPath();
+    context.moveTo(x + (2.2 * scale), y + (1 * scale));
+    context.lineTo(x + (0 * scale), y + (2.2 * scale));
+    context.lineTo(x + (1 * scale), y + (0 * scale));
+    context.lineTo(x + (2.2 * scale), y + (1 * scale));
+    context.stroke();
+  },
+
+  down : (x, y, context, scale) => {
+    context.strokeStyle='white'
+    context.beginPath();
+    context.moveTo(x + (0 * scale), y + (0 * scale));
+    context.lineTo(x + (1.5 * scale), y + (0 * scale));
+    context.lineTo(x + (.75 * scale), y + (2.25 * scale));
+    context.lineTo(x + (0 * scale), y + (0 * scale));
+    context.stroke();
+  }
 }
 
 
@@ -72,6 +137,8 @@ for (code in KEY_CODES) {
   KEY_STATUS[KEY_CODES[code]] = false;
 }
 
+
+var readyForPump = true
 $(window).keydown(function (e) {
   KEY_STATUS.keyDown = true;
   if (KEY_CODES[e.keyCode]) {
@@ -82,6 +149,10 @@ $(window).keydown(function (e) {
   KEY_STATUS.keyDown = false;
   if (KEY_CODES[e.keyCode]) {
     e.preventDefault();
+    if(KEY_CODES[e.keyCode] === 'space' && !paused) {
+      console.log('ready')
+      readyForPump = true
+    }
     KEY_STATUS[KEY_CODES[e.keyCode]] = false;
   }
 });
@@ -1023,11 +1094,11 @@ Game = {
       // Game.spawnAsteroids();
 
       setTimeout(() => {
-        Game.transmission_incoming = true
+        Game.instructional = '<< Transmission Incoming >>'
       }, test ? 500 : 100000)
 
       setTimeout(() => {
-        Game.transmission_incoming = false
+        Game.instructional = ''
         Game.flags.bod_engine_on = true
         Game.textSequence = ['Wow, you did it...The asteroids are all destroyed! We won!', 'Set course for back home Captain, Avery and the kids are all here waiting for you. You\'re a hero!!!']
         Game.textSequence.portrait = 'soundwave'
@@ -1117,15 +1188,15 @@ Game = {
 };
 
 
+var player
+var paused = false;
+
 $(function () {
-  var canvas2 = $('#fake_canvas')
-  Game.canvas2 = canvas2
   var canvas = $("#canvas");
   Game.canvasWidth  = canvas.width();
   Game.canvasHeight = canvas.height();
 
   var context = canvas[0].getContext("2d");
-  var context2 = canvas2[0].getContext("2d");
 
   Text.context = context;
   Text.face = vector_battle;
@@ -1171,6 +1242,7 @@ $(function () {
   Sprite.prototype.matrix  = new Matrix(2, 3);
 
   var ship = new Ship();
+  player = ship
 
   ship.x = Game.canvasWidth / 2;
   ship.y = Game.canvasHeight / 2;
@@ -1200,7 +1272,6 @@ $(function () {
 
   var startTime = null;
 
-  var paused = false;
   var showFramerate = false;
   var avgFramerate = 0;
   var frameCount = 0;
@@ -1297,6 +1368,10 @@ $(function () {
       context.fillStyle='black'
       context.fillRect(0, 0, Game.canvasWidth, Game.canvasHeight);
       context.fillStyle='white'
+
+      let coords = `x${Game.mapX}y${Game.mapY}`
+      if(Map[coords]) Map[coords](context)
+
       for (i = 0; i < sprites.length; i++) {
         sprites[i].run(0);
       }
@@ -1319,27 +1394,32 @@ $(function () {
       Text.renderText(''+avgFramerate, 24, Game.canvasWidth - 38, Game.canvasHeight - 2);
     }
 
-    if(Game.transmission_incoming){
-      console.log('transmission_incoming')
+    if(Game.instructional){
       context.fillStyle='white'
-      let text = '<< Transmission Incoming >>'
+      let text = Game.instructional
       context.font ="24pt Arial"
       let length = context.measureText(text).width
-      context.fillText(text, Game.canvasWidth/2 - length/2, 205)
+      context.fillText(text, Game.canvasWidth/2 - length/2, 400)
+      if(Game.instructional !== '<< Transmission Incoming >>') Game.instructional = ''
     }
 
     if(Game.textSequence.length){
 
       //textbox
       context.fillStyle="rgba(255,255,255, 0.1)"
-      context.fillRect(Game.canvasWidth/2 - 210, 190, 420, 115)
+      context.fillRect(Game.canvasWidth/2 - 210, 210, 420, 95)
 
       //portrait
       if(Game.textSequence.portrait){
         //portrait outline
-        context.fillStyle="rgb(0,0,0)"
+        context.fillStyle="rgba(255,255,255,.1)"
         context.fillRect(Game.canvasWidth/2 - 200, 140, 80, 70)
-        context.drawImage(IMAGES[Game.textSequence.portrait], Game.canvasWidth/2 - 198, 142, 76, 66)
+
+        if(Game.textSequence.portrait === 'ship'){
+          drawShip.down(Game.canvasWidth/2 - 183, 147, context, 25)
+        }else{
+          context.drawImage(IMAGES[Game.textSequence.portrait], Game.canvasWidth/2 - 198, 142, 76, 66)
+        }
       } 
 
       //portrait name
