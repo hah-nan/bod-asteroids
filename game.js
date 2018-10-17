@@ -3,6 +3,8 @@
 // Copyright (c) 2010 Doug McInnes
 //
 
+// $('#password').hide()
+
 function colDetect(rect1, rect2){
   return (rect1.x < rect2.x + rect2.width &&
      rect1.x + rect1.width > rect2.x &&
@@ -15,9 +17,18 @@ var test = true
 //image upload
 var soundwaveImage = new Image();
 soundwaveImage.src = "images/soundwave.png";
+var bedroomtopImage = new Image();
+bedroomtopImage.src = "images/bedroom_toplayer.png";
+var bedroomImage = new Image();
+bedroomImage.src = "images/bedroom.png";
+var dennyImage = new Image();
+dennyImage.src = "images/denny.png";
 
 var IMAGES = { 
- 'soundwave': soundwaveImage
+ 'soundwave': soundwaveImage,
+ 'bedroomTop':bedroomtopImage,
+ 'bedroom':bedroomImage,
+ 'denny':dennyImage
 }
 
 var Map = {}
@@ -26,9 +37,50 @@ Map.x1y0 = function(context){
   makePlanet(context, 500, 200, 20)
   makePlanet(context, 530, 250, 10)
 
-  makeShip(context, 200, 200, 'down', ['What happened over there?', 'One second there was a ton of asteroids and then suddenly they were all gone...'])
+  makeShip(context, 200, 200, 7, 'down', { name: 'Andre', dialogue: ['What happened over there?', 'One second there was all the asteroids and then suddenly they were all gone...', 'Well I guess we are safe now']})
 }
 
+Map.x0y2 = function(context){
+  makeShip(context, 500, 290, 7, 'downleft', { name: 'Julie', dialogue: ['Oh look its the Hero who destroyed the asteroids! I can\`t believe you are talking to me'] })
+  makeShip(context, 440, 240, 7, 'down', { name: 'James', dialogue: ['Hey gang its the hero! Does anyone have anything for autographs?'] })
+  makeShip(context, 380, 290, 7, 'downright', { name: 'Benton Jr.', dialogue: ['.....I don`t know.... you just dont look like a hero to me.', 'My friends all love you, but I don`t buy it. I dont believe the stories they tell', 'My dad tells me things..I know a real hero when I see one'] })
+}
+
+Map.x0y3 = function(context){
+  makePlanet(context, 130, 50, 300)
+  makeShip(context, 500, 290, 30, 'left', { name: 'Benton Sr.', dialogue: ['Look buddy I think you deserve to go home and be with your family like the rest of us', 'But if I find out there was any foul play with this asteroid buisiness', 'If I find out....you -cheated- or something. If I find out the asteroids are still out there...', 'I\ll will find you, and I will throw an asteroid right at your head in front of your family', 'But for now just get the hell off my planet and go east to your family'] })
+}
+
+Map.x0y4 = function(context){
+  makePlanet(context, 130, -500, 300)
+  makeShip(context, 400, 30, 10, 'down', { name: 'Bellasaniana', dialogue: ['Its just a dream.... we will all wake up and see the \'roids closer than ever...burning...ready to destroy us'] })
+}
+
+Map.x11y11 = function(context){
+  let denny = {x: 655, y: 455, width:150, height:150}
+  let playerRect = {x: player.x - 25, y: player.y - 25, width: 50, height: 50}
+
+  if( readyForPump && colDetect(playerRect, denny) ){
+    Game.instructional = 'Press button to enter'
+    if(KEY_STATUS['space']){
+      readyForPump = false
+      typingPassword = true
+      Game.instructional = ''
+    } 
+  }
+  
+  context.drawImage(IMAGES.denny, 680,480)
+  makePlanet(context, 600, 400, 340)
+}
+Map.x12y11 = function(context){
+  makePlanet(context, -180, 400, 340)
+}
+Map.x12y12 = function(context){
+  makePlanet(context, -180, -140, 340)
+}
+Map.x11y12 = function(context){
+  makePlanet(context, 600, -140, 340)
+}
 
 function makePlanet(context, x, y, size){
   context.strokeStyle='white'
@@ -37,22 +89,22 @@ function makePlanet(context, x, y, size){
   context.stroke();
 }
 
-function makeShip(context, x, y, facing, dialogue){
+function makeShip(context, x, y, scale, facing, text){
   let playerRect = {x: player.x - 25, y: player.y - 25, width: 50, height: 50}
 
   let shipRect = {x: x - 25, y: y - 25, width: 50, height: 50}
-  if(!paused && readyForPump && dialogue && colDetect(playerRect, shipRect)){
+  if(!paused && readyForPump && text.dialogue && colDetect(playerRect, shipRect)){
     Game.instructional = 'Press button to talk'
     if(KEY_STATUS['space'] && !Game.textSequence.length){
       readyForPump = false
-      Game.textSequence = dialogue
-      Game.textSequence.name = 'Andre'
+      Game.textSequence = text.dialogue
+      Game.textSequence.name = text.name
       Game.textSequence.portrait = 'ship'
       Game.instructional = ''
     } 
   }
 
-  drawShip[facing](x, y, context, 7)
+  drawShip[facing](x, y, context, scale)
 }
 
 
@@ -137,7 +189,7 @@ for (code in KEY_CODES) {
   KEY_STATUS[KEY_CODES[code]] = false;
 }
 
-
+// var typingPassword = true
 var readyForPump = true
 $(window).keydown(function (e) {
   KEY_STATUS.keyDown = true;
@@ -479,16 +531,21 @@ Sprite = function () {
       if (this.x > Game.canvasWidth) {
         this.x = 0;
         Game.mapX++
+        if(Game.mapX > 20) Game.mapX = 0
       } else if (this.x < 0) {
         this.x = Game.canvasWidth;
         Game.mapX--
+        if(Game.mapX < 0) Game.mapX = 20
       }
       if (this.y > Game.canvasHeight) {
         this.y = 0;
         Game.mapY++
+        if(Game.mapY > 20) Game.mapY = 0
       } else if (this.y < 0) {
         this.y = Game.canvasHeight;
         Game.mapY--
+        if(Game.mapY < 0) Game.mapY = 20
+
       }
     }else if(!Game.flags.bod_engine_on){
       if (this.x > Game.canvasWidth) {
@@ -1378,8 +1435,9 @@ $(function () {
     }
 
     var score_text = ''+Game.score;
-    Text.renderText(score_text, 18, Game.canvasWidth - 14 * score_text.length, 20);
-
+    if(test) context.fillText(`X:${Game.mapX} Y:${Game.mapY}`, Game.canvasWidth - 100, 20);
+    else Text.renderText(score_text, 18, Game.canvasWidth - 14 * score_text.length, 20);
+    
     // extra dudes
     for (i = 0; i < Game.lives; i++) {
       context.save();
@@ -1483,13 +1541,13 @@ $(function () {
       case 'f': // show framerate
         showFramerate = !showFramerate;
         break;
-      case 'p': // pause
-        paused = !paused;
-        if (!paused) {
-          // start up again
-          unpause()
-        }
-        break;
+      // case 'p': // pause
+      //   paused = !paused;
+      //   if (!paused) {
+      //     // start up again
+      //     unpause()
+      //   }
+      //   break;
       case 'm': // mute
         SFX.muted = !SFX.muted;
         break;

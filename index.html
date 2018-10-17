@@ -1,9 +1,13 @@
 <html>
   <head>
-    <script src="jquery-1.4.1.min.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
     <script src="vector_battle_regular.typeface.js"></script>
     <script src="ipad.js"></script>
     <script src="game.js"></script>
+
     <style>
       #canvas { border:1px solid black; top:0px; left:0px; }
       .button { position:absolute; border:1px solid black; }
@@ -13,11 +17,49 @@
       #left { width:100px; height:100px; bottom:0px;}
       #right { width:100px; height:100px; bottom:0px; left:100px; }
       #space { width:200px; height:200px; bottom:0px; right:0px; }
+      #password {
+        position: fixed;
+        left:320px;
+        top:240px;
+      }
+      .cyclic_input {
+          float: left;
+          padding: 1rem;
+          font-size: 5rem;
+          position: relative;
+          display: table-cell;
+          vertical-align: middle;
+          text-align: center;
+      }
+
+      .cyclic_input:before,
+      .cyclic_input:after {
+          display: block;
+          position: absolute;
+          left: 50%;
+          font-size: 1rem;
+          transform: translateX(-50%);
+      }
+
+      .cyclic_input:before {
+          content: '▲';
+          top: 0;
+      }
+
+      .cyclic_input:after {
+          content: '▼';
+          bottom: 0;
+      }
     </style>
   </head>
   <body>
     <div id="game-container">
       <canvas id="canvas" width="780" height="540"></canvas>
+      <div id ='password'>
+        <div class='cyclic_input' tabindex="0">A</div>
+        <div class='cyclic_input' tabindex="0">A</div>
+        <div class='cyclic_input' tabindex="0">A</div>
+      </div>
       <div id="left-controls">
         <div id="up" class='button'>THRUST</div>
         <div id="left" class='button'>LEFT</div>
@@ -27,5 +69,8 @@
         <div id="space" class='button'>FIRE</div>
       </div>
     </div>
+        <script src="keyboard.js"></script>
+
   </body>
+
 </html>
