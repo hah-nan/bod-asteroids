@@ -1,7 +1,6 @@
 KEYCODES = { left: 37, up: 38, right: 39, down: 40 };
 
-console.log($('.cyclic_input'))
-$('.cyclic_input').on('keydown',function(ev){
+$('.cyclic_input').keydown(function(ev){
     input = $(this);
     val = $(this).text();
     

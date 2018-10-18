@@ -31,6 +31,25 @@ var IMAGES = {
  'denny':dennyImage
 }
 
+var Inside = {}
+Inside.bar = function(context){
+  context.drawImage(bedroomImage, 0,0)
+  context.drawImage(bedroomtopImage, 0,0)
+
+  let door = {x: 685, y: 405, width:150, height:180}
+  let playerRect = {x: player.x - 25, y: player.y - 25, width: 50, height: 50}
+
+  if( readyForPump && colDetect(playerRect, door) ){
+    Game.instructional = 'Press button to enter'
+    if(KEY_STATUS['space']){
+      readyForPump = false
+      Game.inside = ''
+      Game.flags.bod_engine_on = true
+    }
+
+  }
+}
+
 var Map = {}
 Map.x1y0 = function(context){
   makePlanet(context, 100,100, 200)
@@ -64,7 +83,11 @@ Map.x11y11 = function(context){
     Game.instructional = 'Press button to enter'
     if(KEY_STATUS['space']){
       readyForPump = false
-      typingPassword = true
+      paused = true
+      Game.flags.unlockingCombo = true
+      console.log('...unlocking combo?')
+      $('.cyclic_input').css({display:'block'})
+      $('.cyclic_input').first().focus()
       Game.instructional = ''
     } 
   }
@@ -80,6 +103,21 @@ Map.x12y12 = function(context){
 }
 Map.x11y12 = function(context){
   makePlanet(context, 600, -140, 340)
+}
+
+function checkCombo(){
+
+  let char1 = $('.cyclic_input')[0].innerHTML
+  let char2 = $('.cyclic_input')[1].innerHTML
+  let char3 = $('.cyclic_input')[2].innerHTML
+
+  console.log(char1,char2,char3)
+  if(char1 === "B" && char2 === "C" && char3 === "D"){
+    console.log('victory!')
+    Game.inside = 'bar'
+    Game.bod_engine_on = false
+  }
+
 }
 
 function makePlanet(context, x, y, size){
@@ -189,7 +227,6 @@ for (code in KEY_CODES) {
   KEY_STATUS[KEY_CODES[code]] = false;
 }
 
-// var typingPassword = true
 var readyForPump = true
 $(window).keydown(function (e) {
   KEY_STATUS.keyDown = true;
@@ -202,7 +239,6 @@ $(window).keydown(function (e) {
   if (KEY_CODES[e.keyCode]) {
     e.preventDefault();
     if(KEY_CODES[e.keyCode] === 'space' && !paused) {
-      console.log('ready')
       readyForPump = true
     }
     KEY_STATUS[KEY_CODES[e.keyCode]] = false;
@@ -528,24 +564,36 @@ Sprite = function () {
   };
   this.wrapPostMove = function () {
     if(this.name === 'ship'){
-      if (this.x > Game.canvasWidth) {
-        this.x = 0;
-        Game.mapX++
-        if(Game.mapX > 20) Game.mapX = 0
-      } else if (this.x < 0) {
-        this.x = Game.canvasWidth;
-        Game.mapX--
-        if(Game.mapX < 0) Game.mapX = 20
-      }
-      if (this.y > Game.canvasHeight) {
-        this.y = 0;
-        Game.mapY++
-        if(Game.mapY > 20) Game.mapY = 0
-      } else if (this.y < 0) {
-        this.y = Game.canvasHeight;
-        Game.mapY--
-        if(Game.mapY < 0) Game.mapY = 20
-
+      if(Game.flags.bod_engine_on){
+        if (this.x > Game.canvasWidth) {
+          this.x = 0;
+          Game.mapX++
+          if(Game.mapX > 20) Game.mapX = 0
+        } else if (this.x < 0) {
+          this.x = Game.canvasWidth;
+          Game.mapX--
+          if(Game.mapX < 0) Game.mapX = 20
+        }
+        if (this.y > Game.canvasHeight) {
+          this.y = 0;
+          Game.mapY++
+          if(Game.mapY > 20) Game.mapY = 0
+        } else if (this.y < 0) {
+          this.y = Game.canvasHeight;
+          Game.mapY--
+          if(Game.mapY < 0) Game.mapY = 20
+        }
+      }else{
+        if (this.x > Game.canvasWidth) {
+          this.x = 0;
+        } else if (this.x < 0) {
+          this.x = Game.canvasWidth;
+        }
+        if (this.y > Game.canvasHeight) {
+          this.y = 0;
+        } else if (this.y < 0) {
+          this.y = Game.canvasHeight;
+        }
       }
     }else if(!Game.flags.bod_engine_on){
       if (this.x > Game.canvasWidth) {
@@ -1081,6 +1129,7 @@ Game = {
   mapY:0,
   textSequence: [],
   flags: {},
+  inside:'',
 
   canvasWidth: 1280,
   canvasHeight: 768,
@@ -1367,7 +1416,8 @@ $(function () {
     //draw currentMap
     let coords = `x${Game.mapX}y${Game.mapY}`
         // console.log(coords, Map[coords])
-    if(Map[coords]) Map[coords](context)
+    if(Game.inside.length) Inside[Game.inside](context)
+    else if(Map[coords]) Map[coords](context)
 
     // if (KEY_STATUS.g) {
     //   context.beginPath();
@@ -1427,7 +1477,8 @@ $(function () {
       context.fillStyle='white'
 
       let coords = `x${Game.mapX}y${Game.mapY}`
-      if(Map[coords]) Map[coords](context)
+      if(Game.inside.length) Inside[Game.inside](context)
+      else if(Map[coords]) Map[coords](context)
 
       for (i = 0; i < sprites.length; i++) {
         sprites[i].run(0);
@@ -1521,6 +1572,7 @@ $(function () {
       
   function unpause(){
     // start up again
+    paused = false
     lastFrame = Date.now();
     mainLoop();
   }
@@ -1531,12 +1583,16 @@ $(function () {
         if(Game.textSequence.length){
           Game.textSequence.shift()
           renderGUI(true);
-          console.log(Game.textSequence)
           if(!Game.textSequence.length){
-            paused = false
             unpause()
-           }
-        } 
+          }
+        }
+        if(Game.flags.unlockingCombo){
+          $('.cyclic_input').css({display:'none'})
+          Game.flags.unlockingCombo = false
+          checkCombo()
+          unpause()
+        }
         break;
       case 'f': // show framerate
         showFramerate = !showFramerate;

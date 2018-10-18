@@ -1,9 +1,10 @@
 <html>
   <head>
-<script
+    <script src="jquery-1.4.1.min.js"></script>
+   <!--  <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-  crossorigin="anonymous"></script>
+  crossorigin="anonymous"></script>  -->
     <script src="vector_battle_regular.typeface.js"></script>
     <script src="ipad.js"></script>
     <script src="game.js"></script>
@@ -30,6 +31,16 @@
           display: table-cell;
           vertical-align: middle;
           text-align: center;
+          color:white;
+          display: none;
+          width:60px;
+          border:1px solid rgba(0,0,0,0);
+      }
+
+      .cyclic_input:focus{
+        border-color: white;
+        border: 2px solid;
+        outline: none;
       }
 
       .cyclic_input:before,
