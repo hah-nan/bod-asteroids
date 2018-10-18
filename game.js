@@ -34,10 +34,11 @@ var IMAGES = {
 var Inside = {}
 Inside.bar = function(context){
   context.drawImage(bedroomImage, 0,0)
-  context.drawImage(bedroomtopImage, 0,0)
+  Game.specialImage = bedroomtopImage
 
   let door = {x: 685, y: 405, width:150, height:180}
   let playerRect = {x: player.x - 25, y: player.y - 25, width: 50, height: 50}
+  let chest = {x: 385, y: 0, width:100, height:165}
 
   if( readyForPump && colDetect(playerRect, door) ){
     Game.instructional = 'Press button to enter'
@@ -45,7 +46,13 @@ Inside.bar = function(context){
       readyForPump = false
       Game.inside = ''
       Game.flags.bod_engine_on = true
+      Game.specialImage = null
     }
+  }
+
+  if( readyForPump && colDetect(playerRect, chest) ){
+    Game.instructional = 'Press button to inspect'
+
 
   }
 }
@@ -115,9 +122,8 @@ function checkCombo(){
   if(char1 === "B" && char2 === "C" && char3 === "D"){
     console.log('victory!')
     Game.inside = 'bar'
-    Game.bod_engine_on = false
+    Game.flags.bod_engine_on = false
   }
-
 }
 
 function makePlanet(context, x, y, size){
@@ -1549,6 +1555,8 @@ $(function () {
 
       paused = true;
     }
+
+    if(Game.specialImage) context.drawImage(Game.specialImage, 0,0)
   }
 
   function wrapText(context, text, x, y, maxWidth, lineHeight) {
