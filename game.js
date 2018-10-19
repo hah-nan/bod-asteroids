@@ -38,7 +38,7 @@ Inside.bar = function(context){
 
   let door = {x: 685, y: 405, width:150, height:180}
   let playerRect = {x: player.x - 25, y: player.y - 25, width: 50, height: 50}
-  let chest = {x: 385, y: 0, width:100, height:165}
+  let chest = {x: 50, y: 0, width:385, height:165}
 
   if( readyForPump && colDetect(playerRect, door) ){
     Game.instructional = 'Press button to enter'
@@ -52,8 +52,13 @@ Inside.bar = function(context){
 
   if( readyForPump && colDetect(playerRect, chest) ){
     Game.instructional = 'Press button to inspect'
-
-
+    if(KEY_STATUS['space']){
+      readyForPump = false
+      Game.textSequence = ['Under the bed you see an open chest on a desk', 'A combination lock that once secured the chest is open with the combination 936', 'Inside the chest you see a scattering of private notes and a vial filled with a magical purple liquid']
+      Game.textSequence.name = 'Chest'
+      Game.textSequence.portrait = 'ship'
+      Game.instructional = ''
+    }
   }
 }
 
@@ -1491,6 +1496,8 @@ $(function () {
       }
     }
 
+    if(Game.specialImage) context.drawImage(Game.specialImage, 0,0)
+
     var score_text = ''+Game.score;
     if(test) context.fillText(`X:${Game.mapX} Y:${Game.mapY}`, Game.canvasWidth - 100, 20);
     else Text.renderText(score_text, 18, Game.canvasWidth - 14 * score_text.length, 20);
@@ -1556,7 +1563,6 @@ $(function () {
       paused = true;
     }
 
-    if(Game.specialImage) context.drawImage(Game.specialImage, 0,0)
   }
 
   function wrapText(context, text, x, y, maxWidth, lineHeight) {
