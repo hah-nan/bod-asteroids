@@ -71,23 +71,28 @@ Map.x1y0 = function(context){
   makeShip(context, 200, 200, 7, 'down', { name: 'Andre', dialogue: ['What happened over there?', 'One second there was all the asteroids and then suddenly they were all gone...', 'Well I guess we are safe now']})
 }
 
-Map.x0y2 = function(context){
+Map.x0y1 = function(context){
   makeShip(context, 500, 290, 7, 'downleft', { name: 'Julie', dialogue: ['Oh look its the Hero who destroyed the asteroids! I can\`t believe you are talking to me'] })
   makeShip(context, 440, 240, 7, 'down', { name: 'James', dialogue: ['Hey gang its the hero! Does anyone have anything for autographs?'] })
   makeShip(context, 380, 290, 7, 'downright', { name: 'Benton Jr.', dialogue: ['.....I don`t know.... you just dont look like a hero to me.', 'My friends all love you, but I don`t buy it. I dont believe the stories they tell', 'My dad tells me things..I know a real hero when I see one'] })
 }
 
-Map.x0y3 = function(context){
+Map.x0y2 = function(context){
   makePlanet(context, 130, 50, 300)
   makeShip(context, 500, 290, 30, 'left', { name: 'Benton Sr.', dialogue: ['Look buddy I think you deserve to go home and be with your family like the rest of us', 'But if I find out there was any foul play with this asteroid buisiness', 'If I find out....you -cheated- or something. If I find out the asteroids are still out there...', 'I\ll will find you, and I will throw an asteroid right at your head in front of your family', 'But for now just get the hell off my planet and go east to your family'] })
 }
 
-Map.x0y4 = function(context){
+Map.x0y3 = function(context){
   makePlanet(context, 130, -500, 300)
-  makeShip(context, 400, 30, 10, 'down', { name: 'Bellasaniana', dialogue: ['Its just a dream.... we will all wake up and see the \'roids closer than ever...burning...ready to destroy us'] })
+  makeShip(context, 400, 30, 10, 'down', { name: 'Bellasaniana', dialogue: ['I\'m trying to tell my husband this is all just a dream',  'we will all wake up and see the \'roids closer than ever...burning...ready to destroy us'] })
 }
 
-Map.x11y11 = function(context){
+
+Map.x3y2 = function(context){
+  makePlanet(context, 400, 250, 40)
+}
+
+Map.x4y4 = function(context){
   let denny = {x: 655, y: 455, width:150, height:150}
   let playerRect = {x: player.x - 25, y: player.y - 25, width: 50, height: 50}
 
@@ -107,15 +112,17 @@ Map.x11y11 = function(context){
   context.drawImage(IMAGES.denny, 680,480)
   makePlanet(context, 600, 400, 340)
 }
-Map.x12y11 = function(context){
+Map.x5y4 = function(context){
   makePlanet(context, -180, 400, 340)
 }
-Map.x12y12 = function(context){
+Map.x5y5 = function(context){
   makePlanet(context, -180, -140, 340)
+  makeShip(context, 300, 400, 15, 'downright', {name: 'Eli', dialogue: ['You know that house on the other side of this planet?', 'I heard a clue how to unlock it', 'The combination is posted inside the shower in the owners room']})
 }
-Map.x11y12 = function(context){
+Map.x4y5 = function(context){
   makePlanet(context, 600, -140, 340)
 }
+
 
 function checkCombo(){
 
@@ -579,20 +586,20 @@ Sprite = function () {
         if (this.x > Game.canvasWidth) {
           this.x = 0;
           Game.mapX++
-          if(Game.mapX > 20) Game.mapX = 0
+          if(Game.mapX > 6) Game.mapX = 0
         } else if (this.x < 0) {
           this.x = Game.canvasWidth;
           Game.mapX--
-          if(Game.mapX < 0) Game.mapX = 20
+          if(Game.mapX < 0) Game.mapX = 6
         }
         if (this.y > Game.canvasHeight) {
           this.y = 0;
           Game.mapY++
-          if(Game.mapY > 20) Game.mapY = 0
+          if(Game.mapY > 6) Game.mapY = 0
         } else if (this.y < 0) {
           this.y = Game.canvasHeight;
           Game.mapY--
-          if(Game.mapY < 0) Game.mapY = 20
+          if(Game.mapY < 0) Game.mapY = 6
         }
       }else{
         if (this.x > Game.canvasWidth) {
