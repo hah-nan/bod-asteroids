@@ -82,11 +82,12 @@ Map.x11y12 = function(context){
   makePlanet(context, 600, -140, 340)
 }
 
-function makePlanet(context, x, y, size){
+function makePlanet(context, x, y){
+  let size = planetSize()
   context.strokeStyle='white'
   context.fillStyle = colorPlanet()
   context.beginPath();
-  context.arc(x+size, y+size, size, 0, 2*Math.PI);
+  context.arc(x+size, y+ size, size, 0, 2*Math.PI);
   context.stroke();
 }
 
@@ -97,7 +98,14 @@ function colorPlanet(){
   return color
 }
 
-
+function planetSize(){
+  let base = 340; 
+  let max = 60; 
+  let min = 10
+  let variance = Math.floor(Math.random() * (max - min + 1)) + min;
+  let constant = Math.round(Math.random()) * max - variance
+  return base + constant 
+}
 
 
 
