@@ -140,10 +140,21 @@ function checkCombo(){
 
 function makePlanet(context, x, y, size){
   context.strokeStyle='white'
+  //console.log(context.fillStyle = colorPlanet())
   context.beginPath();
   context.arc(x+size, y+size, size, 0, 2*Math.PI);
   context.stroke();
 }
+
+      
+function colorPlanet(){
+  let colorArray = ['red', 'blue', 'green'];
+  let color = colorArray[Math.floor(Math.random()*colorArray.length)];
+  console.log(color, 'color');
+  return color
+}
+
+console.log(colorPlanet(), 'colorplanet');
 
 function makeShip(context, x, y, scale, facing, text){
   let playerRect = {x: player.x - 25, y: player.y - 25, width: 50, height: 50}
