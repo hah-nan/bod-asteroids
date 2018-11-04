@@ -664,9 +664,9 @@ Ship = function () {
     // if(gamepads[0].axes[1] === -1) alert('1, -1')
     // if(gamepads[0].axes[1] === 1) alert('1, 1')
 
-    if (gamepads[0].axes[0] === -1 || KEY_STATUS.left) {
+    if (gamepads[0].axes[0] === 1 || KEY_STATUS.left) {
       this.vel.rot = -6;
-    } else if (gamepads[0].axes[0] === 1 || KEY_STATUS.right) {
+    } else if (gamepads[0].axes[0] === -1 || KEY_STATUS.right) {
       this.vel.rot = 6;
     } else {
       this.vel.rot = 0;
@@ -1216,8 +1216,15 @@ Game = {
       this.state = 'waiting';
     },
     waiting: function () {
-      Text.renderText(window.ipad ? 'Touch Screen to Start' : 'Press Space to Start', 36, Game.canvasWidth/2 - 270, Game.canvasHeight/2);
-      if (KEY_STATUS.space || window.gameStart) {
+      Text.renderText(window.ipad ? 'Touch Screen to Start' : 'Press Button to Start', 36, Game.canvasWidth/2 - 270, Game.canvasHeight/2);
+      var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+      
+      if (!gamepads[0]) {
+        // alert('gamepad disconnected');
+        gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
+      }
+
+      if (KEY_STATUS.space || window.gameStart || gamepads[0].buttons[0].pressed || gamepads[0].buttons[1].pressed) {
         KEY_STATUS.space = false; // hack so we don't shoot right away
         window.gameStart = false;
         this.state = 'start';
