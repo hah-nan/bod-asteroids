@@ -12,7 +12,7 @@ function colDetect(rect1, rect2){
      rect1.y + rect1.height > rect2.y)
 }
 
-var test = true
+var test = false
 
 //image upload
 var soundwaveImage = new Image();
@@ -78,12 +78,12 @@ Map.x0y1 = function(context){
 }
 
 Map.x0y2 = function(context){
-  makePlanet(context, 130, 50, 300)
+  makePlanet(context, 130, 50, 340)
   makeShip(context, 500, 290, 30, 'left', { name: 'Benton Sr.', dialogue: ['Look buddy I think you deserve to go home and be with your family like the rest of us', 'But if I find out there was any foul play with this asteroid buisiness', 'If I find out....you -cheated- or something. If I find out the asteroids are still out there...', 'I\ll will find you, and I will throw an asteroid right at your head in front of your family', 'But for now just get the hell off my planet and go east to your family'] })
 }
 
 Map.x0y3 = function(context){
-  makePlanet(context, 130, -500 -74, 300)
+  makePlanet(context, 130, -500 -74, 340)
   makeShip(context, 400, 30, 10, 'down', { name: 'Bellasaniana', dialogue: ['I\'m trying to tell my husband this is all just a dream',  'we will all wake up and see the \'roids closer than ever...burning...ready to destroy us'] })
 }
 
@@ -664,9 +664,9 @@ Ship = function () {
     // if(gamepads[0].axes[1] === -1) alert('1, -1')
     // if(gamepads[0].axes[1] === 1) alert('1, 1')
 
-    if (gamepads[0].axes[1] === -1 || KEY_STATUS.left) {
+    if (gamepads[0].axes[0] === -1 || KEY_STATUS.left) {
       this.vel.rot = -6;
-    } else if (gamepads[0].axes[1] === 1 || KEY_STATUS.right) {
+    } else if (gamepads[0].axes[0] === 1 || KEY_STATUS.right) {
       this.vel.rot = 6;
     } else {
       this.vel.rot = 0;
