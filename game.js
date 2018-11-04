@@ -110,17 +110,17 @@ Map.x4y4 = function(context){
   }
   
   context.drawImage(IMAGES.denny, 680,480)
-  makePlanet(context, 600, 400, 340)
+  makePlanet(context, 600, 400, 390)
 }
 Map.x5y4 = function(context){
-  makePlanet(context, -180, 400, 340)
+  makePlanet(context, -180 - 39, 400 - 60, 390)
 }
 Map.x5y5 = function(context){
-  makePlanet(context, -180, -140, 340)
+  makePlanet(context, -180 - 39, -140 - 60, 390)
   makeShip(context, 300, 400, 15, 'downright', {name: 'Eli', dialogue: ['You know that house on the other side of this planet?', 'I heard a clue how to unlock it', 'The combination is posted inside the shower in the owners room']})
 }
 Map.x4y5 = function(context){
-  makePlanet(context, 600, -140, 340)
+  makePlanet(context, 600 - 39, -140 - 60, 390)
 }
 
 
