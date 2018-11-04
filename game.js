@@ -692,7 +692,7 @@ Ship = function () {
         this.bulletCounter = 10;
         for (var i = 0; i < this.bullets.length; i++) {
           if (!this.bullets[i].visible) {
-            SFX.laser();
+            SFX.laser.play();
             var bullet = this.bullets[i];
             var rad = ((this.rot-90) * Math.PI)/180;
             var vectorx = Math.cos(rad);
@@ -717,7 +717,7 @@ Ship = function () {
   };
 
   this.collision = function (other) {
-    SFX.explosion();
+    SFX.explosion.play();
     Game.explosionAt(other.x, other.y);
     Game.FSM.state = 'player_died';
     this.visible = false;
@@ -820,7 +820,7 @@ BigAlien = function () {
           bullet.vel.x = 6 * vectorx;
           bullet.vel.y = 6 * vectory;
           bullet.visible = true;
-          SFX.laser();
+          SFX.laser.play();
           break;
         }
       }
@@ -830,7 +830,7 @@ BigAlien = function () {
 
   BigAlien.prototype.collision = function (other) {
     if (other.name == "bullet") Game.score += 200;
-    SFX.explosion();
+    SFX.explosion.play();
     Game.explosionAt(other.x, other.y);
     this.visible = false;
     this.newPosition();
@@ -937,7 +937,7 @@ Asteroid = function () {
   this.collidesWith = ["ship", "bullet", "bigalien", "alienbullet"];
 
   this.collision = function (other) {
-    SFX.explosion();
+    SFX.explosion.play();
     if (other.name == "bullet") Game.score += 120 / this.scale;
     this.scale /= 3;
     if (this.scale > 0.5) {
@@ -1131,30 +1131,36 @@ SFX = {
   explosion: new Audio('51467__smcameron__missile_explosion.wav')
 };
 
-// preload audio
-for (var sfx in SFX) {
-  (function () {
-    var audio = SFX[sfx];
-    audio.muted = true;
-    audio.play();
+// SFX.laser.play()
 
-    SFX[sfx] = function () {
-      if (!this.muted) {
-        if (audio.duration == 0) {
-          // somehow dropped out
-          audio.load();
-          audio.play();
-        } else {
-          audio.muted = false;
-          audio.currentTime = 0;
-        }
-      }
-      return audio;
-    }
-  })();
-}
+// preload audio
+// for (var sfx in SFX) {
+//   (function () {
+//     var audio = SFX[sfx];
+//     audio.muted = true;
+//     audio.play();
+
+//     SFX[sfx] = function () {
+//       if (!this.muted) {
+//         if (audio.duration == 0) {
+//           // somehow dropped out
+//           audio.load();
+//           audio.play();
+//         } else {
+//           audio.muted = false;
+//           audio.currentTime = 0;
+//         }
+//       }
+//       return audio;
+//     }
+//   })();
+// }
 // pre-mute audio
-SFX.muted = true;
+SFX.muted = false;
+SFX.laser.load()
+
+
+console.log(SFX)
 
 Game = {
   score: 0,
@@ -1226,6 +1232,10 @@ Game = {
           Game.sprites[i].visible = false;
         }
       }
+
+      // console.log(SFX.laser)
+      // SFX.laser()
+
 
       Game.startTime = Date.now();
 
