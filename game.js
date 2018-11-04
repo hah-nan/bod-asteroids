@@ -83,7 +83,7 @@ Map.x0y2 = function(context){
 }
 
 Map.x0y3 = function(context){
-  makePlanet(context, 130, -500, 300)
+  makePlanet(context, 130, -500 -74, 300)
   makeShip(context, 400, 30, 10, 'down', { name: 'Bellasaniana', dialogue: ['I\'m trying to tell my husband this is all just a dream',  'we will all wake up and see the \'roids closer than ever...burning...ready to destroy us'] })
 }
 
@@ -113,14 +113,14 @@ Map.x4y4 = function(context){
   makePlanet(context, 600, 400, 390)
 }
 Map.x5y4 = function(context){
-  makePlanet(context, -180 - 39, 400 - 60, 390)
+  makePlanet(context, -180 - 39, 400 - 74, 390)
 }
 Map.x5y5 = function(context){
-  makePlanet(context, -180 - 39, -140 - 60, 390)
+  makePlanet(context, -180 - 39, -140 - 74, 390)
   makeShip(context, 300, 400, 15, 'downright', {name: 'Eli', dialogue: ['You know that house on the other side of this planet?', 'I heard a clue how to unlock it', 'The combination is posted inside the shower in the owners room']})
 }
 Map.x4y5 = function(context){
-  makePlanet(context, 600 - 39, -140 - 60, 390)
+  makePlanet(context, 600 - 39, -140 - 74, 390)
 }
 
 
