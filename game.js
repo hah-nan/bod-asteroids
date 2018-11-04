@@ -648,15 +648,31 @@ Ship = function () {
   this.collidesWith = ["asteroid", "bigalien", "alienbullet"];
 
   this.preMove = function (delta) {
-    if (KEY_STATUS.left) {
+
+    var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+    if (!gamepads[0]) {
+      // alert('gamepad disconnected');
+      gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
+    }
+
+    // if(gamepads[0].buttons[0].pressed === true) alert("shoot!")
+
+    // if(gamepads[0].axes[0] === -1) alert('0, -1')
+    // if(gamepads[0].axes[0] === 1) alert('0, 1')
+
+
+    // if(gamepads[0].axes[1] === -1) alert('1, -1')
+    // if(gamepads[0].axes[1] === 1) alert('1, 1')
+
+    if (gamepads[0].axes[1] === -1 || KEY_STATUS.left) {
       this.vel.rot = -6;
-    } else if (KEY_STATUS.right) {
+    } else if (gamepads[0].axes[1] === 1 || KEY_STATUS.right) {
       this.vel.rot = 6;
     } else {
       this.vel.rot = 0;
     }
 
-    if (KEY_STATUS.up) {
+    if (KEY_STATUS.up || gamepads[0].buttons[0].pressed) {
       var rad = ((this.rot-90) * Math.PI)/180;
       this.acc.x = 0.5 * Math.cos(rad);
       this.acc.y = 0.5 * Math.sin(rad);
@@ -670,7 +686,8 @@ Ship = function () {
     if (this.bulletCounter > 0) {
       this.bulletCounter -= delta;
     }
-    if (KEY_STATUS.space) {
+
+    if (KEY_STATUS.space || gamepads[0].buttons[1].pressed) {
       if (this.bulletCounter <= 0) {
         this.bulletCounter = 10;
         for (var i = 0; i < this.bullets.length; i++) {
@@ -1149,8 +1166,8 @@ Game = {
   flags: {},
   inside:'',
 
-  canvasWidth: 1280,
-  canvasHeight: 768,
+  canvasWidth: 819,
+  canvasHeight: 600,
 
   sprites: [],
   ship: null,
@@ -1224,7 +1241,7 @@ Game = {
       setTimeout(() => {
         Game.instructional = ''
         Game.flags.bod_engine_on = true
-        Game.textSequence = ['Wow, you did it...The asteroids are all destroyed! We won!', 'Set course for back home Captain, Avery and the kids are all here waiting for you. You\'re a hero!!!']
+        Game.textSequence = ['Wow, you did it...The asteroids are all destroyed! We won!', 'Set course for back home Captain, Connie and the kids are all here waiting for you. You\'re a hero!!!']
         Game.textSequence.portrait = 'soundwave'
         Game.textSequence.name = 'Headquarters'
       }, test ? 1000 : 110000)
