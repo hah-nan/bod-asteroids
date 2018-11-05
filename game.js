@@ -1710,12 +1710,9 @@ $(function () {
     }
 
     if(readyForAxis && ifAxisPressed() && Game.flags.unlockingCombo){
-      let input = $('.cyclic_input').filter((el) => {
-        console.log($(el).is(':focus'))
-        return $(el).is(':focus')
+      let input = $('.cyclic_input').filter((num, el) => {
+        return el === document.activeElement
       })[0]
-
-      console.log('input', input)
 
       let val = $(input).text();
 
@@ -1761,10 +1758,9 @@ $(function () {
   KEYCODES = { left: 37, up: 38, right: 39, down: 40 };
 
   $('.cyclic_input').keydown(function(ev){
+
       input = $(this);
       val = $(this).text();
-
-      console.log($('.cyclic_input'))
       
       switch (ev.keyCode) {   
         case KEYCODES.right:
