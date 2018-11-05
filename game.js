@@ -34,6 +34,11 @@ var IMAGES = {
 
 function ifButtonsPressed(){
   var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+        if (!gamepads[0]) {
+        // alert('gamepad disconnected');
+        gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
+      }
+
   return KEY_STATUS['space'] || gamepads[0].buttons[0].pressed || gamepads[0].buttons[1].pressed
 }
 
@@ -49,6 +54,10 @@ Inside.bar = function(context){
   if( readyForPump && colDetect(playerRect, door) ){
     Game.instructional = 'Press button to enter'
     var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+      if (!gamepads[0]) {
+        // alert('gamepad disconnected');
+        gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
+      }
 
     if(ifButtonsPressed()){
       readyForPump = false
@@ -1668,7 +1677,56 @@ $(function () {
         unpause()
       }
     }
+
+    let input = $('.cyclic_input')
+    var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+      if (!gamepads[0]) {
+        // alert('gamepad disconnected');
+        gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
+      }
+
+    if(gamepads[0].axes[0] === -1) input.next().focus();
+
+    if(gamepads[0].axes[0] === 1) input.prev().focus();
+
+    if(gamepads[0].axes[1] === -1)input.text(advanceCharBy(val, 1));
+    
+    if(gamepads[0].axes[0] === 1) input.text(advanceCharBy(val, -1));
   }
+
+  KEYCODES = { left: 37, up: 38, right: 39, down: 40 };
+
+  $('.cyclic_input').keydown(function(ev){
+      input = $(this);
+      val = $(this).text();
+      
+      switch (ev.keyCode) {   
+        case KEYCODES.right:
+          input.next().focus();
+          break;
+        case KEYCODES.left:
+          input.prev().focus();
+          break;
+        case KEYCODES.up:
+          input.text(advanceCharBy(val, 1));
+          break;
+        case KEYCODES.down:
+          input.text(advanceCharBy(val, -1));
+          break;
+        default:
+          if (ev.keyCode >= 65 && ev.keyCode <= 65 + 26) {
+              input.text(String.fromCharCode(ev.keyCode));
+              input.next().focus();
+          }
+      };
+      ev.preventDefault();
+  });
+
+  advanceCharBy = function(char, distance) {
+      oldCode = char.charCodeAt(0);
+      newCode = 65 + (oldCode - 65 + 26 + distance) % 26;
+      return String.fromCharCode(newCode);
+  };
 
   $(window).keydown(function (e) {
     switch (KEY_CODES[e.keyCode]) {
