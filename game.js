@@ -12,7 +12,7 @@ function colDetect(rect1, rect2){
      rect1.y + rect1.height > rect2.y)
 }
 
-var test = false
+var test = true
 
 //image upload
 var soundwaveImage = new Image();
@@ -275,6 +275,7 @@ $(window).keydown(function (e) {
     e.preventDefault();
 
     if(KEY_CODES[e.keyCode] === 'space' && !paused) {
+      console.log("in key up")
       readyForPump = true
     }
     KEY_STATUS[KEY_CODES[e.keyCode]] = false;
@@ -1673,7 +1674,8 @@ $(function () {
         checkCombo()
         unpause()
       }
-    }else{
+    }else if(readyForPump == false){
+      console.log("IN POLL GAMEPADS")
       readyForPump = true
     }
 
