@@ -33,10 +33,10 @@ var IMAGES = {
 
 
 function ifButtonsPressed(){
-    var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
-    return KEY_STATUS['space'] || gamepads[0].buttons[0].pressed || gamepads[0].buttons[1].pressed
-
+  var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+  return KEY_STATUS['space'] || gamepads[0].buttons[0].pressed || gamepads[0].buttons[1].pressed
 }
+
 var Inside = {}
 Inside.bar = function(context){
   context.drawImage(bedroomImage, 0,0)
@@ -1263,7 +1263,7 @@ Game = {
 
       setTimeout(() => {
         Game.instructional = '<< Transmission Incoming >>'
-      }, test ? 500 : 100000)
+      }, test ? 500 : 45000)
 
       setTimeout(() => {
         Game.instructional = ''
@@ -1271,7 +1271,7 @@ Game = {
         Game.textSequence = ['Wow, you did it...The asteroids are all destroyed! We won!', 'Set course for back home Captain, Connie and the kids are all here waiting for you. You\'re a hero!!!']
         Game.textSequence.portrait = 'soundwave'
         Game.textSequence.name = 'Headquarters'
-      }, test ? 1000 : 110000)
+      }, test ? 1000 : 55000)
 
 
 
@@ -1467,7 +1467,7 @@ $(function () {
   })();
 
   var mainLoop = function () {
-    if(!ifButtonsPressed()) readyForPump = true
+    if(gamepadconnected && !ifButtonsPressed()) readyForPump = true
 
     //clear screen
     context.fillStyle='black'
@@ -1527,6 +1527,8 @@ $(function () {
     } else {
       requestAnimFrame(mainLoop, canvasNode);
     }
+
+
   };
 
   mainLoop();
@@ -1641,6 +1643,31 @@ $(function () {
     paused = false
     lastFrame = Date.now();
     mainLoop();
+  }
+
+
+  var gamepadconnected = false
+  window.addEventListener("gamepadconnected", () => {
+    var gamepadconnected = true
+    setInterval(pollGamepads, 5)
+  });
+
+  function pollGamepads() {    
+    if(ifButtonsPressed()){
+      if(Game.textSequence.length){
+        Game.textSequence.shift()
+        renderGUI(true);
+        if(!Game.textSequence.length){
+          unpause()
+        }
+      }
+      if(Game.flags.unlockingCombo){
+        $('.cyclic_input').css({display:'none'})
+        Game.flags.unlockingCombo = false
+        checkCombo()
+        unpause()
+      }
+    }
   }
 
   $(window).keydown(function (e) {
