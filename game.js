@@ -119,10 +119,9 @@ Map.x4y4 = function(context){
       readyForPump = false
       paused = true
       Game.flags.unlockingCombo = true
-      console.log('...unlocking combo?')
       $('.cyclic_input').css({display:'block'})
       $('.cyclic_input').first().focus()
-      Game.instructional = ''
+      Game.instructional = 'Press button to submit'
     } 
   }
   
@@ -1476,8 +1475,6 @@ $(function () {
   })();
 
   var mainLoop = function () {
-    if(gamepadconnected && !ifButtonsPressed()) readyForPump = true
-
     //clear screen
     context.fillStyle='black'
     context.fillRect(0, 0, Game.canvasWidth, Game.canvasHeight);
@@ -1662,7 +1659,7 @@ $(function () {
   });
 
   function pollGamepads() {    
-    if(ifButtonsPressed()){
+    if(ifButtonsPressed() && readyForPump){
       if(Game.textSequence.length){
         Game.textSequence.shift()
         renderGUI(true);
@@ -1676,6 +1673,8 @@ $(function () {
         checkCombo()
         unpause()
       }
+    }else{
+      readyForPump = true
     }
 
     let input = $('.cyclic_input')
