@@ -39,7 +39,7 @@ function ifButtonsPressed(){
         gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
       }
 
-  return KEY_STATUS['space'] || gamepads[0].buttons[0].pressed || gamepads[0].buttons[1].pressed
+  return gamepads[0].buttons[0].pressed || gamepads[0].buttons[1].pressed
 }
 
 var Inside = {}
@@ -59,7 +59,7 @@ Inside.bar = function(context){
         gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
       }
 
-    if(ifButtonsPressed()){
+    if(KEY_STATUS['space'] || ifButtonsPressed()){
       readyForPump = false
       Game.inside = ''
       Game.flags.bod_engine_on = true
@@ -69,7 +69,7 @@ Inside.bar = function(context){
 
   if( readyForPump && colDetect(playerRect, chest) ){
     Game.instructional = 'Press button to inspect'
-    if(ifButtonsPressed()){
+    if(KEY_STATUS['space'] || ifButtonsPressed()){
       readyForPump = false
       Game.textSequence = ['Under the bed you see an open chest on a desk', 'A combination lock that once secured the chest is open with the combination 936', 'Inside the chest you see a scattering of private notes and a vial filled with a magical purple liquid']
       Game.textSequence.name = 'Chest'
@@ -115,7 +115,7 @@ Map.x4y4 = function(context){
 
   if( readyForPump && colDetect(playerRect, denny) ){
     Game.instructional = 'Press button to enter'
-    if(ifButtonsPressed()){
+    if(KEY_STATUS['space'] || ifButtonsPressed()){
       readyForPump = false
       paused = true
       Game.flags.unlockingCombo = true
@@ -168,7 +168,7 @@ function makeShip(context, x, y, scale, facing, text){
   if(!paused && readyForPump && text.dialogue && colDetect(playerRect, shipRect)){
     Game.instructional = 'Press button to talk'
 
-    if(ifButtonsPressed() && !Game.textSequence.length){
+    if((KEY_STATUS['space'] ||ifButtonsPressed()) && !Game.textSequence.length){
       readyForPump = false
       Game.textSequence = text.dialogue
       Game.textSequence.name = text.name
@@ -1675,13 +1675,15 @@ $(function () {
         checkCombo()
         unpause()
       }
-    }else if(readyForPump == false){
+    }
+
+    if(!ifButtonsPressed() && readyForPump == false){
       console.log("IN POLL GAMEPADS")
       readyForPump = true
     }
 
     let input = $('.cyclic_input')
-          val = $(input).text();
+    let val = $(input).text();
 
     var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
       if (!gamepads[0]) {
@@ -1696,6 +1698,7 @@ $(function () {
     if(gamepads[0].axes[1] === -1)input.text(advanceCharBy(val, 1));
     
     if(gamepads[0].axes[0] === 1) input.text(advanceCharBy(val, -1));
+
   }
 
   KEYCODES = { left: 37, up: 38, right: 39, down: 40 };
