@@ -1665,6 +1665,7 @@ $(function () {
       if(Game.textSequence.length){
         Game.textSequence.shift()
         renderGUI(true);
+        readyForPump = false
         if(!Game.textSequence.length){
           unpause()
         }
