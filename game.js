@@ -34,22 +34,30 @@ var IMAGES = {
 
 function ifButtonsPressed(){
   var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
-        if (!gamepads[0]) {
-        // alert('gamepad disconnected');
-        gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
-      }
-
+  if (!gamepads[0]) {
+    gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
+  }
   return gamepads[0].buttons[0].pressed || gamepads[0].buttons[1].pressed
 }
 
-function ifAxisPressed(){
+function ifAxisCentered(){
   var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
-        if (!gamepads[0]) {
-        // alert('gamepad disconnected');
-        gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
-      }
+  if (!gamepads[0]) {
+      gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
+  }
 
+  console.log(Math.round(gamepads[0].axes[0]), Math.round(gamepads[0].axes[1]))
   return Math.round(gamepads[0].axes[0]) == 0 && Math.round(gamepads[0].axes[1]) == 0
+}
+
+function ifAxisPressed(){
+    var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+    if (!gamepads[0]) {
+      // alert('gamepad disconnected');
+      gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
+    }
+    return Math.round(gamepads[0].axes[0]) == 1 || Math.round(gamepads[0].axes[1]) == 1
+
 }
 
 var Inside = {}
@@ -1693,12 +1701,12 @@ $(function () {
       readyForPump = true
     }
 
-    if(!ifAxisPressed() && readyForAxis == false){
+    if(ifAxisCentered() && readyForAxis == false){
       readyForAxis = true
       console.log('ready for axis again')
     }
 
-    if(readyForAxis){
+    if(readyForAxis && ifAxisPressed() && Game.flags.unlockingCombo){
       let input = $('.cyclic_input')
       console.log(input)
       let val = $(input).text();
