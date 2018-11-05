@@ -1714,6 +1714,8 @@ $(function () {
         return el === document.activeElement
       })[0]
 
+      input = $(input)
+
       let val = $(input).text();
 
       var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
