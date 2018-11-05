@@ -50,7 +50,6 @@ function ifAxisCentered(){
       gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
   }
 
-  console.log(Math.round(gamepads[0].axes[0]), Math.round(gamepads[0].axes[1]))
   return Math.round(gamepads[0].axes[0]) == 0 && Math.round(gamepads[0].axes[1]) == 0
 }
 
@@ -74,11 +73,6 @@ Inside.bar = function(context){
 
   if( readyForPump && colDetect(playerRect, door) ){
     Game.instructional = 'Press button to enter'
-    var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
-      if (!gamepads[0]) {
-        // alert('gamepad disconnected');
-        gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
-      }
 
     if(KEY_STATUS['space'] || ifButtonsPressed()){
       readyForPump = false
@@ -169,7 +163,6 @@ function checkCombo(){
 
   console.log(char1,char2,char3)
   if(char1 === "B" && char2 === "C" && char3 === "D"){
-    console.log('victory!')
     Game.inside = 'bar'
     Game.flags.bod_engine_on = false
   }
@@ -1199,9 +1192,6 @@ SFX = {
 SFX.muted = false;
 SFX.laser.load()
 
-
-console.log(SFX)
-
 Game = {
   score: 0,
   totalAsteroids: 5,
@@ -1279,10 +1269,6 @@ Game = {
           Game.sprites[i].visible = false;
         }
       }
-
-      // console.log(SFX.laser)
-      // SFX.laser()
-
 
       Game.startTime = Date.now();
 
@@ -1682,8 +1668,11 @@ $(function () {
   });
 
   function pollGamepads() {
+    console.log("checking")
     if(ifButtonsPressed() && readyForPump){
+      console.log('ready for pump and buttons pressed')
       if(Game.textSequence.length){
+        console.log("next text input")
         Game.textSequence.shift()
         renderGUI(true);
         readyForPump = false
@@ -1702,6 +1691,7 @@ $(function () {
 
     if(!ifButtonsPressed() && readyForPump == false){
       readyForPump = true
+      console.log("ready for pump again")
     }
 
     if(ifAxisCentered() && readyForAxis == false){
@@ -1727,31 +1717,24 @@ $(function () {
       if(gamepads[0].axes[0] === -1){
         readyForAxis = false
         input.next().focus();
-        console.log("going next right")
       } 
 
       // left
       if(gamepads[0].axes[0] === 1){
         readyForAxis = false
         input.prev().focus();
-                console.log("going back left")
-
       } 
 
       //down
       if(gamepads[0].axes[1] === -1){
         readyForAxis = false
         input.text(advanceCharBy(val, 1));
-                console.log("advancing down")
-
       }
       
       //up
       if(gamepads[0].axes[1] === 1){
         readyForAxis = false
         input.text(advanceCharBy(val, -1));
-                console.log("advancing up")
-
       } 
     }
 
