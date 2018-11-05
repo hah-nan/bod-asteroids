@@ -86,6 +86,7 @@ Inside.bar = function(context){
     Game.instructional = 'Press button to inspect'
     if(KEY_STATUS['space'] || ifButtonsPressed()){
       readyForPump = false
+      console.log("getting reset...")
       Game.textSequence = ['Under the bed you see an open chest on a desk', 'A combination lock that once secured the chest is open with the combination 936', 'Inside the chest you see a scattering of private notes and a vial filled with a magical purple liquid']
       Game.textSequence.name = 'Chest'
       Game.textSequence.portrait = 'ship'
