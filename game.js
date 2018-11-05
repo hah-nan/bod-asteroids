@@ -1668,12 +1668,11 @@ $(function () {
   });
 
   function pollGamepads() {
-    console.log("checking")
     if(ifButtonsPressed() && readyForPump){
-      console.log('ready for pump and buttons pressed')
       if(Game.textSequence.length){
-        console.log("next text input")
         Game.textSequence.shift()
+        console.log("next text input", Game.textSequence)
+
         renderGUI(true);
         readyForPump = false
         if(!Game.textSequence.length){
