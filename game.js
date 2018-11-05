@@ -1659,8 +1659,9 @@ $(function () {
     setInterval(pollGamepads, 5)
   });
 
-  function pollGamepads() {    
+  function pollGamepads() {
     if(ifButtonsPressed() && readyForPump){
+      console.log('polled and ready for punp, buttons pressed')
       if(Game.textSequence.length){
         Game.textSequence.shift()
         renderGUI(true);
@@ -1680,6 +1681,8 @@ $(function () {
     }
 
     let input = $('.cyclic_input')
+          val = $(input).text();
+
     var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
       if (!gamepads[0]) {
         // alert('gamepad disconnected');
