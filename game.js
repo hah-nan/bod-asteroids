@@ -31,6 +31,12 @@ var IMAGES = {
  'denny':dennyImage
 }
 
+
+function ifButtonsPressed(){
+    var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+    return KEY_STATUS['space'] || gamepads[0].buttons[0].pressed || gamepads[0].buttons[1].pressed
+
+}
 var Inside = {}
 Inside.bar = function(context){
   context.drawImage(bedroomImage, 0,0)
@@ -42,7 +48,9 @@ Inside.bar = function(context){
 
   if( readyForPump && colDetect(playerRect, door) ){
     Game.instructional = 'Press button to enter'
-    if(KEY_STATUS['space']){
+    var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+
+    if(ifButtonsPressed()){
       readyForPump = false
       Game.inside = ''
       Game.flags.bod_engine_on = true
@@ -52,7 +60,7 @@ Inside.bar = function(context){
 
   if( readyForPump && colDetect(playerRect, chest) ){
     Game.instructional = 'Press button to inspect'
-    if(KEY_STATUS['space']){
+    if(ifButtonsPressed()){
       readyForPump = false
       Game.textSequence = ['Under the bed you see an open chest on a desk', 'A combination lock that once secured the chest is open with the combination 936', 'Inside the chest you see a scattering of private notes and a vial filled with a magical purple liquid']
       Game.textSequence.name = 'Chest'
@@ -98,7 +106,7 @@ Map.x4y4 = function(context){
 
   if( readyForPump && colDetect(playerRect, denny) ){
     Game.instructional = 'Press button to enter'
-    if(KEY_STATUS['space']){
+    if(ifButtonsPressed()){
       readyForPump = false
       paused = true
       Game.flags.unlockingCombo = true
@@ -151,7 +159,8 @@ function makeShip(context, x, y, scale, facing, text){
   let shipRect = {x: x - 25, y: y - 25, width: 50, height: 50}
   if(!paused && readyForPump && text.dialogue && colDetect(playerRect, shipRect)){
     Game.instructional = 'Press button to talk'
-    if(KEY_STATUS['space'] && !Game.textSequence.length){
+
+    if(ifButtonsPressed() && !Game.textSequence.length){
       readyForPump = false
       Game.textSequence = text.dialogue
       Game.textSequence.name = text.name
@@ -256,6 +265,7 @@ $(window).keydown(function (e) {
   KEY_STATUS.keyDown = false;
   if (KEY_CODES[e.keyCode]) {
     e.preventDefault();
+
     if(KEY_CODES[e.keyCode] === 'space' && !paused) {
       readyForPump = true
     }
@@ -1457,6 +1467,7 @@ $(function () {
   })();
 
   var mainLoop = function () {
+    if(!ifButtonsPressed()) readyForPump = true
 
     //clear screen
     context.fillStyle='black'
