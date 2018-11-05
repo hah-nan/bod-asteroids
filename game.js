@@ -51,13 +51,12 @@ function ifAxisCentered(){
 }
 
 function ifAxisPressed(){
-    var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
-    if (!gamepads[0]) {
-      // alert('gamepad disconnected');
-      gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
-    }
-    return Math.round(gamepads[0].axes[0]) == 1 || Math.round(gamepads[0].axes[1]) == 1
-
+  var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+  if (!gamepads[0]) {
+    // alert('gamepad disconnected');
+    gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
+  }
+  return gamepads[0].axes[0] == 1 || gamepads[0].axes[1] == 1 || gamepads[0].axes[0] == -1 || gamepads[0].axes[1] == -1
 }
 
 var Inside = {}
@@ -1707,8 +1706,13 @@ $(function () {
     }
 
     if(readyForAxis && ifAxisPressed() && Game.flags.unlockingCombo){
-      let input = $('.cyclic_input')
-      console.log(input)
+      let input = $('.cyclic_input').filter((el) => {
+        console.log($(el).is(':focus'))
+        return $(el).is(':focus')
+      })[0]
+
+      console.log('input', input)
+
       let val = $(input).text();
 
       var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
@@ -1734,7 +1738,7 @@ $(function () {
       //down
       if(gamepads[0].axes[1] === -1){
         readyForAxis = false
-        input.text(advanceCharBy(val, -1));
+        input.text(advanceCharBy(val, 1));
                 console.log("advancing down")
 
       }
@@ -1742,7 +1746,7 @@ $(function () {
       //up
       if(gamepads[0].axes[1] === 1){
         readyForAxis = false
-        input.text(advanceCharBy(val, 1));
+        input.text(advanceCharBy(val, -1));
                 console.log("advancing up")
 
       } 
@@ -1755,6 +1759,8 @@ $(function () {
   $('.cyclic_input').keydown(function(ev){
       input = $(this);
       val = $(this).text();
+
+      console.log($('.cyclic_input'))
       
       switch (ev.keyCode) {   
         case KEYCODES.right:
