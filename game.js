@@ -42,6 +42,16 @@ function ifButtonsPressed(){
   return gamepads[0].buttons[0].pressed || gamepads[0].buttons[1].pressed
 }
 
+function ifAxisPressed(){
+  var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+        if (!gamepads[0]) {
+        // alert('gamepad disconnected');
+        gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
+      }
+
+  return Math.round(gamepads[0].axes[0]) == 0 && Math.round(gamepads[0].axes[1]) == 0
+}
+
 var Inside = {}
 Inside.bar = function(context){
   context.drawImage(bedroomImage, 0,0)
@@ -1654,6 +1664,7 @@ $(function () {
 
 
   var gamepadconnected = false
+  var readyForAxis = false
   window.addEventListener("gamepadconnected", () => {
     var gamepadconnected = true
     setInterval(pollGamepads, 5)
@@ -1661,7 +1672,6 @@ $(function () {
 
   function pollGamepads() {
     if(ifButtonsPressed() && readyForPump){
-      console.log('polled and ready for punp, buttons pressed')
       if(Game.textSequence.length){
         Game.textSequence.shift()
         renderGUI(true);
@@ -1672,6 +1682,7 @@ $(function () {
       }
       if(Game.flags.unlockingCombo){
         $('.cyclic_input').css({display:'none'})
+        readyForPump = false
         Game.flags.unlockingCombo = false
         checkCombo()
         unpause()
@@ -1679,26 +1690,46 @@ $(function () {
     }
 
     if(!ifButtonsPressed() && readyForPump == false){
-      console.log("IN POLL GAMEPADS")
       readyForPump = true
+    }
+
+    if(!ifAxisPressed() && readyForAxis == false){
+      readyForAxis = true
     }
 
     let input = $('.cyclic_input')
     let val = $(input).text();
 
     var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
-      if (!gamepads[0]) {
-        // alert('gamepad disconnected');
-        gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
+    if (!gamepads[0]) {
+      gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
+    }
+
+    if(readyForAxis){
+      // right
+      if(gamepads[0].axes[0] === -1){
+        readyForAxis = false
+        input.next().focus();
+      } 
+
+      // left
+      if(gamepads[0].axes[0] === 1){
+        readyForAxis = false
+        input.prev().focus();
+      } 
+
+      //down
+      if(gamepads[0].axes[1] === -1){
+        readyForAxis = false
+        input.text(advanceCharBy(val, -1));
       }
-
-    if(gamepads[0].axes[0] === -1) input.next().focus();
-
-    if(gamepads[0].axes[0] === 1) input.prev().focus();
-
-    if(gamepads[0].axes[1] === -1)input.text(advanceCharBy(val, 1));
-    
-    if(gamepads[0].axes[0] === 1) input.text(advanceCharBy(val, -1));
+      
+      //up
+      if(gamepads[0].axes[1] === 1){
+        readyForAxis = false
+        input.text(advanceCharBy(val, 1));
+      } 
+    }
 
   }
 
