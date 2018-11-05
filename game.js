@@ -1695,39 +1695,48 @@ $(function () {
 
     if(!ifAxisPressed() && readyForAxis == false){
       readyForAxis = true
-    }
-
-    let input = $('.cyclic_input')
-    let val = $(input).text();
-
-    var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
-    if (!gamepads[0]) {
-      gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
+      console.log('ready for axis again')
     }
 
     if(readyForAxis){
+      let input = $('.cyclic_input')
+      console.log(input)
+      let val = $(input).text();
+
+      var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+      if (!gamepads[0]) {
+        gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
+      }
+
       // right
       if(gamepads[0].axes[0] === -1){
         readyForAxis = false
         input.next().focus();
+        console.log("going next right")
       } 
 
       // left
       if(gamepads[0].axes[0] === 1){
         readyForAxis = false
         input.prev().focus();
+                console.log("going back left")
+
       } 
 
       //down
       if(gamepads[0].axes[1] === -1){
         readyForAxis = false
         input.text(advanceCharBy(val, -1));
+                console.log("advancing down")
+
       }
       
       //up
       if(gamepads[0].axes[1] === 1){
         readyForAxis = false
         input.text(advanceCharBy(val, 1));
+                console.log("advancing up")
+
       } 
     }
 
