@@ -82,6 +82,7 @@ Inside.bar = function(context){
     }
   }
 
+  console.log(readyForPump)
   if( readyForPump && colDetect(playerRect, chest) ){
     Game.instructional = 'Press button to inspect'
     if(KEY_STATUS['space'] || ifButtonsPressed()){
@@ -1673,9 +1674,8 @@ $(function () {
       if(Game.textSequence.length){
         Game.textSequence.shift()
         console.log("next text input", Game.textSequence)
-
-        renderGUI(true);
         readyForPump = false
+        renderGUI(true);
         if(!Game.textSequence.length){
           unpause()
         }
