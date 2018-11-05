@@ -82,12 +82,10 @@ Inside.bar = function(context){
     }
   }
 
-  console.log(readyForPump)
   if( readyForPump && colDetect(playerRect, chest) ){
     Game.instructional = 'Press button to inspect'
     if(KEY_STATUS['space'] || ifButtonsPressed()){
       readyForPump = false
-      console.log("getting reset...")
       Game.textSequence = ['Under the bed you see an open chest on a desk', 'A combination lock that once secured the chest is open with the combination 936', 'Inside the chest you see a scattering of private notes and a vial filled with a magical purple liquid']
       Game.textSequence.name = 'Chest'
       Game.textSequence.portrait = 'ship'
@@ -1673,7 +1671,6 @@ $(function () {
     if(ifButtonsPressed() && readyForPump){
       if(Game.textSequence.length){
         Game.textSequence.shift()
-        console.log("next text input", Game.textSequence)
         readyForPump = false
         renderGUI(true);
         if(!Game.textSequence.length){
@@ -1691,12 +1688,12 @@ $(function () {
 
     if(!ifButtonsPressed() && readyForPump == false){
       readyForPump = true
-      console.log("ready for pump again")
+      // console.log("ready for pump again")
     }
 
     if(ifAxisCentered() && readyForAxis == false){
       readyForAxis = true
-      console.log('ready for axis again')
+      // console.log('ready for axis again')
     }
 
     if(readyForAxis && ifAxisPressed() && Game.flags.unlockingCombo){
