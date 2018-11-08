@@ -360,7 +360,7 @@ makeShip(context, 200, 60, 18, 'down', {name: 'Empathetic Spaceship', dialogue: 
 Map.x3y1 = function(context){
 
     if(SFX.partymusic.paused){
-      SFX.partymusic.volume = .2
+      SFX.partymusic.volume = .4
      SFX.partymusic.play()
   }
     makeShip(context, 680, 500, 10, 'upleft', { name: 'Bitter Spaceship', dialogue: ['Hero! hey, I thought I would catch you here',
@@ -1655,7 +1655,8 @@ Game = {
       setTimeout(() => {
         Game.instructional = ''
         Game.flags.bod_engine_on = true
-        Game.textSequence = ['YOU DID IT!!!! THE ASTEROIDS ARE GONE !!!!!', 'Holy....COW!!! Let the GRAND CELEBRATION begin. WE ARE SAVED', 'YOU ARE A HERO!!! I knew u could do it','Ok I\'m getting the party started right now I invited EVERY1!!!', 'GET HERE AS SOON AS YOU CAN WE ARe ALL waiting for u']
+        readyForPump = false
+        Game.textSequence = ['WHERE\'D THE ASTEROIDS GO??', 'WOW...YOU DID IT!!!! THE ASTEROIDS ARE GONE !!!!!', 'YOU DEFEATED THEM','Holy....COW!!! Let the GRAND CELEBRATION begin. WE ARE SAVED', 'YOU ARE A HERO!!! I knew u could do it','Ok I\'m getting the party started right now I invited EVERY1!!!', 'GET HERE AS SOON AS YOU CAN WE ARe ALL waiting for u']
         Game.textSequence.portrait = 'soundwave'
         Game.textSequence.name = 'Transmission from Connie'
       }, test ? 1000 : 55000)
