@@ -1,6 +1,6 @@
 
 var participants = ['Participant 1', 'Participant 2', 'Participant 3', 'Participant 4', 'Participant 5', 'Participant 6']
-var test = true
+var test = false
 
 // Canvas Asteroids
 //
