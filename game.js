@@ -1,3 +1,7 @@
+
+var participants = ['Participant 1', 'Participant 2', 'Participant 3', 'Participant 4', 'Participant 5', 'Participant 6']
+var test = true
+
 // Canvas Asteroids
 //
 // Copyright (c) 2010 Doug McInnes
@@ -16,7 +20,6 @@ function colDetect(rect1, rect2){
      rect1.y + rect1.height > rect2.y)
 }
 
-var test = true
 
 //image upload
 var soundwaveImage = new Image();
@@ -24,7 +27,7 @@ soundwaveImage.src = "images/soundwave.png";
 var bedroomtopImage = new Image();
 bedroomtopImage.src = "images/bedroom_toplayer.png";
 var bedroomImage = new Image();
-bedroomImage.src = "images/bedroom.png";
+bedroomImage.src = "images/bedroom1.png";
 var dennyImage = new Image();
 dennyImage.src = "images/denny.png";
 
@@ -64,18 +67,27 @@ function ifAxisPressed(){
 
 var Inside = {}
 Inside.bar = function(context){
-  context.drawImage(bedroomImage, 0,0)
+  context.drawImage(bedroomImage, 20,38)
   Game.specialImage = bedroomtopImage
 
   let door = {x: 685, y: 405, width:150, height:180}
   let playerRect = {x: player.x - 25, y: player.y - 25, width: 50, height: 50}
-  let chest = {x: 50, y: 0, width:385, height:165}
+  let chest = {x: 300, y: 60, width:200, height:165}
+
+  makeShip(context, 100, 300, 7, 'downleft', { name: participants[0], dialogue: ['Hey how ya doing'] })
+  makeShip(context, 130, 312, 7, 'downleft', { name: participants[1], dialogue: ['Will! you\'re back'] })
+  makeShip(context, 650, 167, 7, 'upleft', { name: participants[2], dialogue: ['This is weird'] })
+  makeShip(context, 130, 145, 10, 'right', { name: participants[3], dialogue: ['It\'s REALLY cozy down here'] })
+  makeShip(context, 756, 379, 7, 'left', { name: participants[4], dialogue: ['Cool lava lamp'] })
+  makeShip(context, 88, 545, 7, 'down', { name: participants[5], dialogue: ['This really just looks like someone\'s closet'] })
+
 
   if( readyForPump && colDetect(playerRect, door) ){
     Game.instructional = 'Press button to enter'
 
     if(KEY_STATUS['space'] || ifButtonsPressed()){
       readyForPump = false
+      SFX.closedoor.play()
       Game.inside = ''
       Game.flags.bod_engine_on = true
       Game.specialImage = null
@@ -83,10 +95,10 @@ Inside.bar = function(context){
   }
 
   if( readyForPump && colDetect(playerRect, chest) ){
-    Game.instructional = 'Press button to inspect'
+    Game.instructional = 'PRESS BUTTON TO INSPECT DESK'
     if(KEY_STATUS['space'] || ifButtonsPressed()){
       readyForPump = false
-      Game.textSequence = ['Under the bed you see an open chest on a desk', 'A combination lock that once secured the chest is open with the combination 936', 'Inside the chest you see a scattering of private notes and a vial filled with a magical purple liquid']
+      Game.textSequence = ['Under the bed you see an open chest on a desk', 'A combination lock that once secured the chest is open with the combination 936', 'Inside the chest you see a scattering of private notes and a vial filled with a magical purple liquid', 'One of the notes is different than the rest']
       Game.textSequence.name = 'Chest'
       Game.textSequence.portrait = 'ship'
       Game.instructional = ''
@@ -100,28 +112,49 @@ Map.x1y0 = function(context){
   makePlanet(context, 500, 200, 20)
   makePlanet(context, 530, 250, 10)
 
-  makeShip(context, 200, 200, 7, 'down', { name: 'Andre', dialogue: ['What happened over there?', 'One second there was all the asteroids and then suddenly they were all gone...', 'Well I guess we are safe now']})
+  makeShip(context, 200, 200, 7, 'down', { name: 'Normal Spaceship', dialogue: ['What happened over there?', 'One second there was all the asteroids and then suddenly they were all gone...', 'Well I guess we are safe now! Can I get ya a beer?']})
 }
 
 Map.x0y1 = function(context){
-  makeShip(context, 500, 290, 7, 'downleft', { name: 'Julie', dialogue: ['Oh look its the Hero who destroyed the asteroids! I can\`t believe you are talking to me'] })
-  makeShip(context, 440, 240, 7, 'down', { name: 'James', dialogue: ['Hey gang its the hero! Does anyone have anything for autographs?'] })
-  makeShip(context, 380, 290, 7, 'downright', { name: 'Benton Jr.', dialogue: ['.....I don`t know.... you just dont look like a hero to me.', 'My friends all love you, but I don`t buy it. I dont believe the stories they tell', 'My dad tells me things..I know a real hero when I see one'] })
+  makeShip(context, 500, 290, 7, 'downleft', { name: 'Preteen Spaceship', dialogue: ['Oh are you the hero that saved us?! Omgosh!', 
+'Your so close to me..you look smaller in person',
+'Get closer...',
+'omg celebrity'] })
+  makeShip(context, 440, 240, 7, 'down', { name: 'Child Spaceship', dialogue: ['Dad said its safe to go out now, no asteroids! Thank you hero!'] })
+  makeShip(context, 380, 290, 7, 'downright', { name: 'Teen Spaceship', dialogue: ['Hey man fuck off',
+'...',
+'Yeah YOU! Fuck off, I said!',
+'...',
+'I heard my mom talking to my dad',
+'She knows your bullshit man',
+'my brother and sister here might buy your whole hero shtick, but not me',
+'She heard it all from her friend at your stupid Grand Celebration. How come you\'re not even there, huh?',
+'...I just can’t believe you would do this',
+'Ignore the truth and leave it to our generation to clean it all up once your done with your little party',
+'You are what I hate'] })
 }
 
 Map.x0y2 = function(context){
   makePlanet(context, 130, 50, 340)
-  makeShip(context, 500, 290, 30, 'left', { name: 'Benton Sr.', dialogue: ['Look buddy I think you deserve to go home and be with your family like the rest of us', 'But if I find out there was any foul play with this asteroid buisiness', 'If I find out....you -cheated- or something. If I find out the asteroids are still out there...', 'I\ll will find you, and I will throw an asteroid right at your head in front of your family', 'But for now just get the hell off my planet and go east to your family'] })
+  makeShip(context, 500, 290, 30, 'left', { name: 'Father Spaceship', dialogue: ['Look buddy I think you deserve to go home and celebrate with your friends and family like the rest of us', 'But if I find out there was any foul play with this asteroid buisiness', 'If I find out....you -cheated- or something. If I find out the asteroids are still out there...', 'If I find out this is a.....', '...DREAM...', 'I\ll will find you, and I will throw an asteroid right at your head in front of your family', 'But for now just get the hell off my planet and go east to your family'] })
 }
 
 Map.x0y3 = function(context){
   makePlanet(context, 130, -500 -74, 340)
-  makeShip(context, 400, 30, 10, 'down', { name: 'Bellasaniana', dialogue: ['I\'m trying to tell my husband this is all just a dream',  'we will all wake up and see the \'roids closer than ever...burning...ready to destroy us'] })
+  makeShip(context, 400, 30, 10, 'down', { name: 'Mother Spaceship', dialogue: ['I should never have told him what my friend told me.. My friend..she\'s such a BUZZKILL.', 'ugh.. god... I hope she is wrong. This can\'t be a dream, can it? How will I explain this to the kids?'] })
 }
 
 
 Map.x3y2 = function(context){
   makePlanet(context, 400, 250, 40)
+
+  if(SFX.partymusic.paused){
+      SFX.partymusic.volume = .5
+     SFX.partymusic.play()
+  }
+
+  makeShip(context, 740, 120, 10, 'left', { name: 'Alien Spaceship', dialogue: ['Look I’m not from this universe but y’all sure know how to party']})
+  makeShip(context, 750, 150, 6, 'left', { name: 'Ex Spaceship', dialogue: ['Hi hero...', 'look let\'s talk later','congrats with everything, great party','but...im busy with someone']})
 }
 
 Map.x4y4 = function(context){
@@ -140,7 +173,7 @@ Map.x4y4 = function(context){
     } 
   }
   
-  context.drawImage(IMAGES.denny, 680,480)
+  context.drawImage(IMAGES.denny, 750,500)
   makePlanet(context, 600, 400, 390)
 }
 Map.x5y4 = function(context){
@@ -148,10 +181,313 @@ Map.x5y4 = function(context){
 }
 Map.x5y5 = function(context){
   makePlanet(context, -180 - 39, -140 - 74, 390)
-  makeShip(context, 300, 400, 15, 'downright', {name: 'Eli', dialogue: ['You know that house on the other side of this planet?', 'I heard a clue how to unlock it', 'The combination is posted inside the shower in the owners room']})
+  makeShip(context, 300, 400, 15, 'downright', {name: 'Explorer Spaceship', dialogue: ['I\'ve been searching for this planet for 26 years.... Planet Denny.', 
+    'I\'m finally here',
+    'Somewhere on this planet theres a locked house that guards a secret',
+    'but I can\'t seem to find it',
+    'and even if I did, I haven’t the faintest clue how to unlock it',
+    'I have grown sick from my travels, I will probably die here before I discover the secret',
+    'Find it for me when I\'m gone, will you?']})
 }
 Map.x4y5 = function(context){
   makePlanet(context, 600 - 39, -140 - 74, 390)
+}
+
+Map.x1y5 = function(context){
+  makePlanet(context, 350, 200, 200)
+  makeShip(context, 460, 460, 15, 'down', {name: 'Detective Spaceship', dialogue: ['Psst..yo hero',
+    'I got a clue', 
+    'So I went to the Grand Celebration on your planet and this ship was acting really CRAZY',
+'They told me something...',
+'You know that house on Denny Planet?',
+'They told me the owner used to forget the code to get into his own house',
+'SO...he wrote it down in his SHOWER cuz then he had to look at it everyday and wouldn\'t forget',
+'Genius if you ask me. I think I\'m gonna write down my mom\'s birthday in MY shower' ]})
+}
+
+Map.x4y2 = function(context){
+  makePlanet(context, 20, 20, 200)
+  makePlanet(context, 410, 300, 50)
+  makePlanet(context, 510, 280, 40)
+
+  if(SFX.partymusic.paused){
+      SFX.partymusic.volume = .9
+     SFX.partymusic.play()
+  }
+
+
+  makeShip(context, 100, 300, 5, 'right', {name: 'Buzzkill Spaceship', dialogue: ['That crazy ship over there ain\'t so crazy you know',
+'we will all inevitably wake up soon',
+'then...we will look up, and the \'roids will be there again',
+'burning the sky',
+'waiting to engulf us in their eternal flames',
+'you and I will become skeletons with fiery flesh',
+'the universe will become hell incarnate',
+'scared of the reality?',
+'fine',
+'let us dream forever then... you coward']})
+
+  makeShip(context, 80, 150, 15, 'downright', {name: 'High School Friend Spaceship', dialogue: ['Hey this is awesome man, here we are the Grand Celebration party',
+'The \'roids are gone! the \'roids are G O N E baby',
+'AND YOURE THE HERO. Ha of all people.. who would have thought?.',
+'Ha, braski, remember high school... MEMORIESSSS',
+'you were such a nerd back then! ha',
+'Hey you look great now though',
+'and Hey look we NEEDED math to stop the \'roids',
+'we needed a hero like you.',
+'lets party till the brake of dawn']})
+
+
+  makeShip(context, 143, 157, 12, 'downleft', {name: 'College Friend Spaceship', dialogue: ['Im completely sober, but I can still celebrate.',
+'I get high OFF LIFE',
+'we can live in peace now.',
+'wow',
+'wow life.',
+'wow remember when we met in college?',
+'same floor in the dorms.. legendary times',
+'Hey remember streaking?',
+'I\'ts time for that again...',
+'It\'s the only way to celebrate',
+'I feel the energy in my bones',
+'in your bones, too',
+'streak with me',
+'wow',
+'under our clothes, we are all nude anyways']})
+
+    makeShip(context, 390, 215, 8, 'left', {name: 'Flirty Spaceship', dialogue: ['oh baby, what a mighty hero we have here!',
+'ooo such strong muscles',
+'triangles are such a stroooooong shape',
+'SHARP ANGLES',
+'69 degrees',
+'ooo',
+'oh stay away',
+'no',
+'come back',
+'oh my',
+'oh ur so hawt hero',
+'is your ship always this pointy or are you just happy to see me?',
+'let\'s celebrate together just me and you']})
+
+
+    makeShip(context, 540, 310, 15, 'left', {name: 'Crazy Spaceship', dialogue: ['THE SECRET',
+'THE TRUTH',
+'THIS ISNT REALITY',
+'ITS A DREAM',
+'WERE ALL DREAMING',
+'WAKE UP DAMMIT',
+'DONT YOU GET IT',
+'YOURE NOT A HERO',
+'YOU HAVEN\'T DONE JACK SHIT',
+'YOU JUST SLEEP ON YOUR BED',
+'THE TRUTH IS IN THE HOUSE',
+'I KNOW HOW TO GET INTO TO THE HOUSE',
+'I TOLD SOMEONE HOW TO GET THE CODE',
+'SHE LEFT',
+'SHE WENT SOUTHWEST',
+'ONLY YOU CAN FIND THE CODE',
+'YOUR MORE THAN JUST A SPACESHIP I CAN TELL',
+'THERE SOMETHING ELSE CONTROLLING YOU',
+'YOU CAN SEE THE CODE FOR ME, YOU CAN DO WHAT I CAN\'T',
+]})
+
+
+//     'ITS DEEPER THAN WE EVEN KNOW',
+// 'THERES MORE LAYERS THAN THE MATRIX',
+// AS MANY LAYERS AS INCEPTION
+// 'WE NEED TO WAKE HIM UP',
+// 'WE NEED TO WAKE YOU UP',
+// 'YOUR THE HERO',
+// DONT YOU SEE
+// DONT YOU FUCKING SEE IT DAMMIT
+// WERE ALL IN A DREAM
+// YOUR NOT DONE
+// YOUR NOT A FUCKING HERO
+// YOU HAVENT DONE JACK SHIT
+// YOUR JUST IN YOUR BED SLEEPING
+
+makeShip(context, 200, 60, 18, 'down', {name: 'Empathetic Spaceship', dialogue: [
+'There\'s a dark beauty in all of this, ya know?',
+'A universe ignorant of its impending demise',
+'...look',
+'I dont wanna believe it either',
+'but those asteroids went away too quickly',
+'good things don’t just happen like that',
+'you can lie to all of us, but dont lie to yourself',
+'you were there..',
+'you know you didn’t destroy the asteroids',
+'...But I feel you.. what can ya do?',
+'Its tough to be a hero, don\'t worry, I know. I don\'t blame you',
+'Hey, I\'ll catch ya later, have a drink for me, alright?'
+]})
+
+
+
+    makeShip(context, 200, 400, 7, 'up', {name: 'Connie', dialogue: ['THAT WUZ NUTZ HUH??',
+'for a SECOND I thought we WUZ done 4',
+'that was like real Armageddon Bruce Willis style',
+'but im so glad your home safe and sound buddy',
+'You\'re my best bud.... ',
+'....',
+'..',
+'I was scared...',
+'AAHHHH MY BUDDY!!!!!!!!! I LOVE YOU BUDY!!!',
+'Enjoy your PartEEEE tonight',
+'Hey this isn\’t a dream is it??? HAHAHA JUSST KDDING',
+'JUSt kidding hahah THAT WOULD BE NUTZZZ',
+'YOU NEVER LIE TO ME']})
+    
+    makeShip(context, 275, 390, 3, 'up', {name: 'Hero Jr', dialogue: [
+'does this mean I can go out into space on my own now????',
+'Whats that person over there saying about the house??',
+'Can I go find the house???',
+'They said theres a secret there...',
+'I want to know the secret!!!',
+'Do you know the secret!!??',
+'you wouldn\'t hide anything from me, would you???'
+  ]})
+
+    makeShip(context, 305, 375, 5, 'upleft', {name: 'Heroine Jr', dialogue: [
+      'now this universe is boring...',
+      'ugh',
+      'I wanna have an adventure just like you did',
+      'I wanna do somethng cooler though',
+      'Something dangerous',
+      'something...real',
+      'I could have defeated those asteroids way faster than you, you know'
+  ]})
+}
+
+Map.x3y1 = function(context){
+
+    if(SFX.partymusic.paused){
+      SFX.partymusic.volume = .2
+     SFX.partymusic.play()
+  }
+    makeShip(context, 680, 500, 10, 'upleft', { name: 'Bitter Spaceship', dialogue: ['Hero! hey, I thought I would catch you here',
+'ok this is a bit delicate',
+'So I heard the news you defeated the \'roids and everything',
+'so I sold my defense shields and everything',
+'...?',
+'your a hero so...you wouldn’t lie to me right?',
+'...',
+'... I was just southeast, at the Grand Celebration party you\'re hosting..',
+'you know what I heard.... I HEARD THAT THE \'ROIDS ARE STILL OUT THERE',
+'is this true????',
+'I mean wtf, what about my family??',
+'my kids??',
+'DID YOU NOT DO ANYTHING??',
+'R U A HERO OR NOT??',
+'WHICH ONE IS IT???',
+'jeeeeeez',
+'UR JUST GONNA PRETEND AND CELEBRATE ARENT YOU???',
+'ugh whatever',
+'I hope what I heard was wrong',
+'enjoy your party',
+'I SOLD my defense shields…',
+'what am I gonna tell my kids',
+'god you\’re an ass']})
+
+}
+
+Map.x6y3 = function(context){
+  makePlanet(context, 200,200,150)
+    makeShip(context, 500, 100, 10, 'left', { name: 'Dancing spaceship', dialogue: [
+'at the Y M C A! = )  we all get down at the Y M C A. =0',
+'…',
+'what am i'
+  ]})
+}
+
+
+Map.x6y0 = function(context){
+  makePlanet(context, 100,50,150)
+
+  makeShip(context, 242, 150, 40, 'downright', { name: 'Argazi', dialogue: [
+'Gazasun you\’re peaceful ways are too soft for a time like this',
+'You have heard the rumours - the disappearance of the asteroids is just an illusion',
+'We have to stop the Grand Celebration',
+'We must begin investigation into how to unveil the illusion',
+'The Hero must be trained vigilantly starting now',
+'Our universe defense shield production line must restart production',
+'The Grand Celebration must be shut down IMMEDIATELY',
+'and we must prepare every ship in the universe for the reality of our situation',
+'The hero must rise to destroy the asteroids before we all die'
+  ]})
+
+  makeShip(context, 502, 150, 40, 'downleft', { name: 'Gazasun', dialogue: [
+'You are a simple fool Argazi',
+'You do not know what makes a hero',
+'I\’ve heard the rumours about the asteroids, I have...',
+'But to shut down the Grand Celebration with news such as that?',
+'This universe has lived in fear of asteroids since its inception',
+'finally theres one moment of joy and you wish to end it?',
+'A hero is not born from destroying something they fear',
+'A hero is born when they want to protect something they love',
+'With this grand celebration the hero can finally see a universe worth fighting for',
+'...',
+'Let the hero be happy for once. This is the moment they rise'
+  ]})
+
+
+      makePlanet(context, 430,50,150)
+
+}
+
+
+Map.x4y3 = function(context){
+  if(SFX.partymusic.paused){
+    SFX.partymusic.volume = .2
+    SFX.partymusic.play()
+  }
+}
+
+
+Map.x5y2 = function(context){
+  if(SFX.partymusic.paused){
+     SFX.partymusic.volume = .2
+     SFX.partymusic.play()
+  }
+}
+
+Map.x1y4 = function(context){
+  makePlanet(context, 300,100,50)
+
+}
+
+Map.x4y1 = function(context){
+  makePlanet(context, 600,100,50)
+
+  if(SFX.partymusic.paused){
+    SFX.partymusic.volume = .5
+     SFX.partymusic.play()
+  }
+  makeShip(context, 200, 500, 10, 'up', { name: 'Lightweight spaceship', dialogue: [
+'oh fuk im so drunk',
+'(pukes)',
+'oh no..',
+'whatever its space who cares'
+  ]})
+}
+
+Map.x4y0 = function(context){
+
+  makeShip(context, 700, 100, 16, 'downleft', { name: 'Scrooge spaceship', dialogue: [
+'Bah!',
+'Get away!',
+'I will NOT be celebrating tonight!',
+'I lash out in anger in order to protect myself from true human connection : something I am scared of, but desperately need!!!',
+'I said get away from me!'
+  ]})
+}
+
+
+Map.x0y6 = function(context){
+  makeShip(context, 400, 300, 7, 'up', { name: 'Lost spaceship', dialogue: [
+'Hero!!!!',
+'Im looking for the Grand Celebration! The party held in your great honor',
+'Oh im so happy to see you, where is it at?? Its definitely not this way..'
+  ]})
+
 }
 
 
@@ -163,6 +499,7 @@ function checkCombo(){
 
   console.log(char1,char2,char3)
   if(char1 === "B" && char2 === "C" && char3 === "D"){
+    SFX.opendoor.play()
     Game.inside = 'bar'
     Game.flags.bod_engine_on = false
   }
@@ -178,7 +515,15 @@ function makePlanet(context, x, y, size){
 function makeShip(context, x, y, scale, facing, text){
   let playerRect = {x: player.x - 25, y: player.y - 25, width: 50, height: 50}
 
-  let shipRect = {x: x - 25, y: y - 25, width: 50, height: 50}
+  let shipRect = {x: x - 25, y: y - 25, width: 30, height: 30}
+  if(scale > 10){
+    shipRect.width = 60
+    shipRect.height = 60
+  }
+  if(scale > 20){
+    shipRect.width = 90
+    shipRect.height = 90
+  }
   if(!paused && readyForPump && text.dialogue && colDetect(playerRect, shipRect)){
     Game.instructional = 'Press button to talk'
 
@@ -223,6 +568,16 @@ drawShip = {
     context.lineTo(x + (0 * scale), y + (1.5 * scale));
     context.lineTo(x + (2.2 * scale), y + (.75 * scale));
     context.lineTo(x + (0 * scale), y + (0 * scale));
+    context.stroke();
+  },
+
+  upleft : (x, y, context, scale) => {
+    context.strokeStyle='white'
+    context.beginPath();
+    context.moveTo(x + (1 * scale), y + (2.2 * scale));
+    context.lineTo(x + (2.2 * scale), y + (1 * scale));
+    context.lineTo(x + (0 * scale), y + (0 * scale));
+    context.lineTo(x + (1 * scale), y + (2.2 * scale));
     context.stroke();
   },
 
@@ -619,19 +974,27 @@ Sprite = function () {
         if (this.x > Game.canvasWidth) {
           this.x = 0;
           Game.mapX++
+          SFX.partymusic.pause()
+
           if(Game.mapX > 6) Game.mapX = 0
         } else if (this.x < 0) {
           this.x = Game.canvasWidth;
           Game.mapX--
+          SFX.partymusic.pause()
+
           if(Game.mapX < 0) Game.mapX = 6
         }
         if (this.y > Game.canvasHeight) {
           this.y = 0;
           Game.mapY++
+          SFX.partymusic.pause()
+
           if(Game.mapY > 6) Game.mapY = 0
         } else if (this.y < 0) {
           this.y = Game.canvasHeight;
           Game.mapY--
+          SFX.partymusic.pause()
+
           if(Game.mapY < 0) Game.mapY = 6
         }
       }else{
@@ -1161,8 +1524,16 @@ Text = {
 
 SFX = {
   laser:     new Audio('39459__THE_bizniss__laser.wav'),
-  explosion: new Audio('51467__smcameron__missile_explosion.wav')
+  explosion: new Audio('51467__smcameron__missile_explosion.wav'),
+  partymusic: new Audio('dontdreamitsover.wav'),
+  opendoor: new Audio('open.wav'),
+  closedoor: new Audio('close.wav')
 };
+
+SFX.laser.volume = .6
+
+
+SFX.partymusic.loop = true
 
 // SFX.laser.play()
 
@@ -1284,9 +1655,9 @@ Game = {
       setTimeout(() => {
         Game.instructional = ''
         Game.flags.bod_engine_on = true
-        Game.textSequence = ['Wow, you did it...The asteroids are all destroyed! We won!', 'Set course for back home Captain, Connie and the kids are all here waiting for you. You\'re a hero!!!']
+        Game.textSequence = ['YOU DID IT!!!! THE ASTEROIDS ARE GONE !!!!!', 'Holy....COW!!! Let the GRAND CELEBRATION begin. WE ARE SAVED', 'YOU ARE A HERO!!! I knew u could do it','Ok I\'m getting the party started right now I invited EVERY1!!!', 'GET HERE AS SOON AS YOU CAN WE ARe ALL waiting for u']
         Game.textSequence.portrait = 'soundwave'
-        Game.textSequence.name = 'Headquarters'
+        Game.textSequence.name = 'Transmission from Connie'
       }, test ? 1000 : 55000)
 
 
@@ -1564,12 +1935,16 @@ $(function () {
       }
     }
 
-    if(Game.specialImage) context.drawImage(Game.specialImage, 0,0)
+    if(Game.specialImage) context.drawImage(Game.specialImage, 20,38)
 
     var score_text = ''+Game.score;
     if(test) context.fillText(`X:${Game.mapX} Y:${Game.mapY}`, Game.canvasWidth - 100, 20);
     else Text.renderText(score_text, 18, Game.canvasWidth - 14 * score_text.length, 20);
     
+    if(test){
+      context.fillText(`mouseX:${mouseX} mouseY:${mouseY}`, Game.canvasWidth -500, 80);
+    } 
+
     // extra dudes
     for (i = 0; i < Game.lives; i++) {
       context.save();
@@ -1805,5 +2180,14 @@ $(function () {
     }
   });
 });
+
+
+var mouseX = 0
+var mouseY = 0
+
+document.onmousemove=function(ev){
+  mouseX = event.clientX
+  mouseY = event.clientY
+}
 
 // vim: fdl=0
