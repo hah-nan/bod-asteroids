@@ -1,5 +1,5 @@
 
-var participants = ['Participant 1', 'Participant 2', 'Participant 3', 'Participant 4', 'Participant 5', 'Participant 6']
+var participants = ['Dylan', 'Gabe', 'Dani', 'Mark', 'Participant 5', 'Participant 6']
 var test = false
 
 // Canvas Asteroids
@@ -44,7 +44,9 @@ function ifButtonsPressed(){
   if (!gamepads[0]) {
     gamepads = [{axes: [5,5,5], buttons:[5,5,5]}]
   }
-  return gamepads[0].buttons[0].pressed || gamepads[0].buttons[1].pressed
+  // return gamepads[0].buttons[0].pressed || gamepads[0].buttons[1].pressed
+  return gamepads[0].buttons[1].pressed
+
 }
 
 function ifAxisCentered(){
@@ -83,7 +85,7 @@ Inside.bar = function(context){
 
 
   if( readyForPump && colDetect(playerRect, door) ){
-    Game.instructional = 'Press button to enter'
+    Game.instructional = 'Press shoot to enter'
 
     if(KEY_STATUS['space'] || ifButtonsPressed()){
       readyForPump = false
@@ -95,10 +97,10 @@ Inside.bar = function(context){
   }
 
   if( readyForPump && colDetect(playerRect, chest) ){
-    Game.instructional = 'PRESS BUTTON TO INSPECT DESK'
+    Game.instructional = 'PRESS SHOOT TO INSPECT DESK'
     if(KEY_STATUS['space'] || ifButtonsPressed()){
       readyForPump = false
-      Game.textSequence = ['Under the bed you see an open chest on a desk', 'A combination lock that once secured the chest is open with the combination 936', 'Inside the chest you see a scattering of private notes and a vial filled with a magical purple liquid', 'One of the notes is different than the rest']
+      Game.textSequence = ['Under the bed you see an open chest on a desk', 'A combination lock that once secured the chest is open with the combination 936', 'Inside the chest you see a scattering of private notes and vials filled with a magical purple liquid']
       Game.textSequence.name = 'Chest'
       Game.textSequence.portrait = 'ship'
       Game.instructional = ''
@@ -162,14 +164,14 @@ Map.x4y4 = function(context){
   let playerRect = {x: player.x - 25, y: player.y - 25, width: 50, height: 50}
 
   if( readyForPump && colDetect(playerRect, denny) ){
-    Game.instructional = 'Press button to enter'
+    Game.instructional = 'Press shoot to enter'
     if(KEY_STATUS['space'] || ifButtonsPressed()){
       readyForPump = false
       paused = true
       Game.flags.unlockingCombo = true
       $('.cyclic_input').css({display:'block'})
       $('.cyclic_input').first().focus()
-      Game.instructional = 'Press button to submit'
+      Game.instructional = 'Press shoot to submit'
     } 
   }
   
@@ -403,7 +405,7 @@ Map.x6y0 = function(context){
   makePlanet(context, 100,50,150)
 
   makeShip(context, 242, 150, 40, 'downright', { name: 'Argazi', dialogue: [
-'Gazasun you\’re peaceful ways are too soft for a time like this',
+'Quazasun you\’re peaceful ways are too soft for a time like this',
 'You have heard the rumours - the disappearance of the asteroids is just an illusion',
 'We have to stop the Grand Celebration',
 'We must begin investigation into how to unveil the illusion',
@@ -414,7 +416,7 @@ Map.x6y0 = function(context){
 'The hero must rise to destroy the asteroids before we all die'
   ]})
 
-  makeShip(context, 502, 150, 40, 'downleft', { name: 'Gazasun', dialogue: [
+  makeShip(context, 502, 150, 40, 'downleft', { name: 'Quazasun', dialogue: [
 'You are a simple fool Argazi',
 'You do not know what makes a hero',
 'I\’ve heard the rumours about the asteroids, I have...',
@@ -525,7 +527,7 @@ function makeShip(context, x, y, scale, facing, text){
     shipRect.height = 90
   }
   if(!paused && readyForPump && text.dialogue && colDetect(playerRect, shipRect)){
-    Game.instructional = 'Press button to talk'
+    Game.instructional = 'Press shoot to talk'
 
     if((KEY_STATUS['space'] ||ifButtonsPressed()) && !Game.textSequence.length){
       readyForPump = false
@@ -1070,8 +1072,8 @@ Ship = function () {
 
     if (KEY_STATUS.up || gamepads[0].buttons[0].pressed) {
       var rad = ((this.rot-90) * Math.PI)/180;
-      this.acc.x = 0.5 * Math.cos(rad);
-      this.acc.y = 0.5 * Math.sin(rad);
+      this.acc.x = 0.35 * Math.cos(rad);
+      this.acc.y = 0.35 * Math.sin(rad);
       this.children.exhaust.visible = Math.random() > 0.1;
     } else {
       this.acc.x = 0;
@@ -1617,7 +1619,7 @@ Game = {
       this.state = 'waiting';
     },
     waiting: function () {
-      Text.renderText(window.ipad ? 'Touch Screen to Start' : 'Press Button to Start', 36, Game.canvasWidth/2 - 270, Game.canvasHeight/2);
+      Text.renderText(window.ipad ? 'Touch Screen to Start' : 'Press shoot to Start', 36, Game.canvasWidth/2 - 270, Game.canvasHeight/2);
       var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
       
       if (!gamepads[0]) {
