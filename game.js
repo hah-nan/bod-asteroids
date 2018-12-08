@@ -30,12 +30,15 @@ var bedroomImage = new Image();
 bedroomImage.src = "images/bedroom1.png";
 var dennyImage = new Image();
 dennyImage.src = "images/denny.png";
+var musicImage = new Image();
+musicImage.src = "images/music.png";
 
 var IMAGES = { 
  'soundwave': soundwaveImage,
  'bedroomTop':bedroomtopImage,
  'bedroom':bedroomImage,
- 'denny':dennyImage
+ 'denny':dennyImage,
+ 'music': musicImage
 }
 
 
@@ -183,7 +186,7 @@ Map.x5y4 = function(context){
 }
 Map.x5y5 = function(context){
   makePlanet(context, -180 - 39, -140 - 74, 390)
-  makeShip(context, 300, 400, 15, 'downright', {name: 'Explorer Spaceship', dialogue: ['I\'ve been searching for this planet for 26 years.... Planet Denny.', 
+  makeShip(context, 300, 400, 15, 'downright', {name: 'Explorer Spaceship', dialogue: ['I\'ve been searching for this planet for 26 years.... Planet Bar.', 
     'I\'m finally here',
     'Somewhere on this planet theres a locked house that guards a secret',
     'but I can\'t seem to find it',
@@ -201,7 +204,7 @@ Map.x1y5 = function(context){
     'I got a clue', 
     'So I went to the Grand Celebration on your planet and this ship was acting really CRAZY',
 'They told me something...',
-'You know that house on Denny Planet?',
+'You know that house on Bar Planet?',
 'They told me the owner used to forget the code to get into his own house',
 'SO...he wrote it down in his SHOWER cuz then he had to look at it everyday and wouldn\'t forget',
 'Genius if you ask me. I think I\'m gonna write down my mom\'s birthday in MY shower' ]})
@@ -217,6 +220,8 @@ Map.x4y2 = function(context){
      SFX.partymusic.play()
   }
 
+
+  context.drawImage(musicImage, 200, 200)
 
   makeShip(context, 100, 300, 5, 'right', {name: 'Buzzkill Spaceship', dialogue: ['That crazy ship over there ain\'t so crazy you know',
 'we will all inevitably wake up soon',
