@@ -1,5 +1,5 @@
 
-var participants = ['Dylan', 'Gabe', 'Dani', 'Mark', 'Participant 5', 'Participant 6']
+var participants = ['Brian', 'Nare', 'Shannon', 'Claire']
 var test = false
 
 // Canvas Asteroids
@@ -82,9 +82,8 @@ Inside.bar = function(context){
   makeShip(context, 100, 300, 7, 'downleft', { name: participants[0], dialogue: ['Hey how ya doing'] })
   makeShip(context, 130, 312, 7, 'downleft', { name: participants[1], dialogue: ['Will! you\'re back'] })
   makeShip(context, 650, 167, 7, 'upleft', { name: participants[2], dialogue: ['This is weird'] })
-  makeShip(context, 130, 145, 10, 'right', { name: participants[3], dialogue: ['It\'s REALLY cozy down here'] })
-  makeShip(context, 756, 379, 7, 'left', { name: participants[4], dialogue: ['Cool lava lamp'] })
-  makeShip(context, 88, 545, 7, 'down', { name: participants[5], dialogue: ['This really just looks like someone\'s closet'] })
+  // makeShip(context, 756, 379, 7, 'left', { name: participants[4], dialogue: ['Cool lava lamp'] })
+  makeShip(context, 88, 545, 7, 'down', { name: participants[3], dialogue: ['This really just looks like someone\'s closet'] })
 
 
   if( readyForPump && colDetect(playerRect, door) ){
@@ -221,7 +220,7 @@ Map.x4y2 = function(context){
   }
 
 
-  context.drawImage(musicImage, 200, 200)
+  context.drawImage(musicImage, 396, 262)
 
   makeShip(context, 100, 300, 5, 'right', {name: 'Buzzkill Spaceship', dialogue: ['That crazy ship over there ain\'t so crazy you know',
 'we will all inevitably wake up soon',
@@ -1657,7 +1656,7 @@ Game = {
 
       setTimeout(() => {
         Game.instructional = '<< Transmission Incoming >>'
-      }, test ? 500 : 45000)
+      }, test ? 500 : 10000)
 
       setTimeout(() => {
         Game.instructional = ''
@@ -1666,7 +1665,7 @@ Game = {
         Game.textSequence = ['WHERE\'D THE ASTEROIDS GO??', 'WOW...YOU DID IT!!!! THE ASTEROIDS ARE GONE !!!!!', 'YOU DEFEATED THEM','Holy....COW!!! Let the GRAND CELEBRATION begin. WE ARE SAVED', 'YOU ARE A HERO!!! I knew u could do it','Ok I\'m getting the party started right now I invited EVERY1!!!', 'GET HERE AS SOON AS YOU CAN WE ARe ALL waiting for u']
         Game.textSequence.portrait = 'soundwave'
         Game.textSequence.name = 'Transmission from Connie'
-      }, test ? 1000 : 55000)
+      }, test ? 1000 : 20000)
 
 
 
@@ -2014,6 +2013,15 @@ $(function () {
       paused = true;
     }
 
+    if(Game.flags.bod_engine_on){
+      //coordinates
+      context.font ="12pt Arial"
+      context.fillStyle="white"
+      context.fillText("X:" + Game.mapX + " Y:" + Game.mapY, 10, 20)
+    }
+
+
+
   }
 
   function wrapText(context, text, x, y, maxWidth, lineHeight) {
@@ -2041,7 +2049,6 @@ $(function () {
     lastFrame = Date.now();
     mainLoop();
   }
-
 
   var gamepadconnected = false
   var readyForAxis = false
