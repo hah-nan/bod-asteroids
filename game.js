@@ -140,7 +140,7 @@ Map.x0y1 = function(context){
 
 Map.x0y2 = function(context){
   makePlanet(context, 130, 50, 340)
-  makeShip(context, 500, 290, 30, 'left', { name: 'Father Spaceship', dialogue: ['Look buddy I think you deserve to go home and celebrate with your friends and family like the rest of us', 'But if I find out there was any foul play with this asteroid buisiness', 'If I find out....you -cheated- or something. If I find out the asteroids are still out there...', 'If I find out this is a.....', '...DREAM...', 'I\ll will find you, and I will throw an asteroid right at your head in front of your family', 'But for now just get the hell off my planet and go east to your family'] })
+  makeShip(context, 500, 290, 30, 'left', { name: 'Father Spaceship', dialogue: ['Look buddy I think you deserve to go home and celebrate with your friends and family like the rest of us', 'But if I find out there was any foul play with this asteroid buisiness', 'If I find out....you -cheated- or something. If I find out the asteroids are still out there...', 'If I find out this is a.....', '...DREAM...', 'I\ll will find you, and I will throw an asteroid right at your head in front of your family', 'But for now just get the hell off my planet and go east to your party at X:4 Y:2'] })
 }
 
 Map.x0y3 = function(context){
@@ -289,7 +289,7 @@ Map.x4y2 = function(context){
 'I KNOW HOW TO GET INTO TO THE HOUSE',
 'I TOLD SOMEONE HOW TO GET THE CODE',
 'SHE LEFT',
-'SHE WENT SOUTHWEST',
+'SHE WENT SOUTHWEST TO X:1 Y:5',
 'ONLY YOU CAN FIND THE CODE',
 'YOUR MORE THAN JUST A SPACESHIP I CAN TELL',
 'THERE SOMETHING ELSE CONTROLLING YOU',
@@ -344,8 +344,8 @@ makeShip(context, 200, 60, 18, 'down', {name: 'Empathetic Spaceship', dialogue: 
     
     makeShip(context, 275, 390, 3, 'up', {name: 'Hero Jr', dialogue: [
 'does this mean I can go out into space on my own now????',
-'Whats that person over there saying about the house??',
-'Can I go find the house???',
+'Whats that person over there saying about the house at X:4 Y:4??',
+'Can I go to the house???',
 'They said theres a secret there...',
 'I want to know the secret!!!',
 'Do you know the secret!!??',
@@ -1662,7 +1662,7 @@ Game = {
         Game.instructional = ''
         Game.flags.bod_engine_on = true
         readyForPump = false
-        Game.textSequence = ['WHERE\'D THE ASTEROIDS GO??', 'WOW...YOU DID IT!!!! THE ASTEROIDS ARE GONE !!!!!', 'YOU DEFEATED THEM','Holy....COW!!! Let the GRAND CELEBRATION begin. WE ARE SAVED', 'YOU ARE A HERO!!! I knew u could do it','Ok I\'m getting the party started right now I invited EVERY1!!!', 'GET HERE AS SOON AS YOU CAN WE ARe ALL waiting for u']
+        Game.textSequence = ['WHERE\'D THE ASTEROIDS GO??', 'WOW...YOU DID IT!!!! THE ASTEROIDS ARE GONE !!!!!', 'YOU DEFEATED THEM','Holy....COW!!! Let the GRAND CELEBRATION begin. WE ARE SAVED', 'YOU ARE A HERO!!! I knew u could do it','Ok I\'m getting the party started right now I invited EVERY1!!!', 'GET HERE AS SOON AS YOU CAN WE ARe ALL waiting for u', 'We R partying at your place at X:4 Y:2 BABY!']
         Game.textSequence.portrait = 'soundwave'
         Game.textSequence.name = 'Transmission from Connie'
       }, test ? 1000 : 20000)
