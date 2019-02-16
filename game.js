@@ -1112,7 +1112,11 @@ Ship = function () {
     }
 
     // limit the ship's speed
-    if (Math.sqrt(this.vel.x * this.vel.x + this.vel.y * this.vel.y) > 8) {
+    let max = 3
+
+    if (KEY_STATUS.up || gamepads[0].buttons[0].pressed) max = 6
+
+    if (Math.sqrt(this.vel.x * this.vel.x + this.vel.y * this.vel.y) > max) {
       this.vel.x *= 0.95;
       this.vel.y *= 0.95;
     }
@@ -2015,12 +2019,10 @@ $(function () {
 
     if(Game.flags.bod_engine_on){
       //coordinates
-      context.font ="12pt Arial"
+      context.font ="20pt Arial"
       context.fillStyle="white"
-      context.fillText("X:" + Game.mapX + " Y:" + Game.mapY, 10, 20)
+      context.fillText("X:" + Game.mapX + " Y:" + Game.mapY, 10, 25)
     }
-
-
 
   }
 
