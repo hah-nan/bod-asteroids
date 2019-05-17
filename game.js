@@ -1666,7 +1666,7 @@ Game = {
         Game.instructional = ''
         Game.flags.bod_engine_on = true
         readyForPump = false
-        Game.textSequence = ['WHERE\'D THE ASTEROIDS GO??', 'WOW...YOU DID IT!!!! THE ASTEROIDS ARE GONE !!!!!', 'YOU DEFEATED THEM','Holy....COW!!! Let the GRAND CELEBRATION begin. WE ARE SAVED', 'YOU ARE A HERO!!! I knew u could do it','Ok I\'m getting the party started right now I invited EVERY1!!!', 'GET HERE AS SOON AS YOU CAN WE ARe ALL waiting for u', 'We R partying at your place at X:4 Y:2 BABY!']
+        Game.textSequence = ['WHERE\'D THE ASTEROIDS GO??', 'WOW...YOU DID IT!!!! THE ASTEROIDS ARE GONE !!!!!', 'YOU DEFEATED THEM','Holy....COW!!! Let the GRAND CELEBRATION begin. WE ARE SAVED', 'YOU ARE A HERO!!! I knew u could do it','Ok I\'m getting the party started right now I invited EVERY1!!!', 'GET HERE AS SOON AS YOU CAN WE ARe ALL waiting for u', 'We R partying at your place at X:4 Y:2 BABY!', 'Everyones gonna B there Waitin 4 u... X:4 Y:2, dont forget about us!']
         Game.textSequence.portrait = 'soundwave'
         Game.textSequence.name = 'Transmission from Connie'
       }, test ? 1000 : 20000)
