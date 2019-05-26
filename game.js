@@ -1,5 +1,5 @@
 
-var participants = ['Brian', 'Nare', 'Shannon', 'Claire']
+var participants = ['Denise', 'Andrew', 'Rick', 'Cassie', 'Sheila', 'Eric']
 var test = false
 
 // Canvas Asteroids
@@ -75,19 +75,20 @@ Inside.bar = function(context){
   context.drawImage(bedroomImage, 20,38)
   Game.specialImage = bedroomtopImage
 
-  let door = {x: 685, y: 405, width:150, height:180}
+  let door = {x: 755, y: 485, width:80, height:80}
   let playerRect = {x: player.x - 25, y: player.y - 25, width: 50, height: 50}
   let chest = {x: 300, y: 60, width:200, height:165}
 
-  makeShip(context, 100, 300, 7, 'downleft', { name: participants[0], dialogue: ['Hey how ya doing'] })
+  makeShip(context, 100, 300, 7, 'downleft', { name: participants[0], dialogue: ['Whens the next dream start, Will?'] })
   makeShip(context, 130, 312, 7, 'downleft', { name: participants[1], dialogue: ['Will! you\'re back'] })
+  participants[5] ? makeShip(context, 220, 340, 7, 'downleft', { name: participants[5], dialogue: ['You got a wild imagination, Will'] }) : null;
   makeShip(context, 650, 167, 7, 'upleft', { name: participants[2], dialogue: ['This is weird'] })
-  // makeShip(context, 756, 379, 7, 'left', { name: participants[4], dialogue: ['Cool lava lamp'] })
-  makeShip(context, 88, 545, 7, 'down', { name: participants[3], dialogue: ['This really just looks like someone\'s closet'] })
+  participants[4] ? makeShip(context, 756, 379, 7, 'left', { name: participants[4], dialogue: ['Will, I hope youve been feeling better'] }) : null;
+  makeShip(context, 88, 545, 7, 'down', { name: participants[3], dialogue: ['The reality is really seeping into this closet!'] })
 
 
   if( readyForPump && colDetect(playerRect, door) ){
-    Game.instructional = 'Press shoot to enter'
+    Game.instructional = 'Press shoot to exit'
 
     if(KEY_STATUS['space'] || ifButtonsPressed()){
       readyForPump = false
